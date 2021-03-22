@@ -6,21 +6,22 @@
 </template>
 
 <script>
-import Header from './componenets/Header'
-import Footer from './componenets/Footer'
+import Header from "./components/Header";
+import Footer from "./components/Footer";
 
 export default {
   name: "app",
   components: {
     Header,
     Footer,
-  }
-}
-
+  },
+};
 </script>
 
 <style>
-html, body, #app{
+html,
+body,
+#app {
   margin: 0;
   display: flex;
   flex-direction: column;
