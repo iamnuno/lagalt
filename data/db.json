@@ -1,0 +1,36 @@
+{
+    "projects": [
+        {
+            "id": 1,
+            "name": "Lost in Translation",
+            "tags": ["Translation", "Sign Language", "English"],
+            "type": "Web development",
+            "skills": ["Javascript", "Vue", "HTML", "CSS"]
+        },
+        {
+            "id": 2,
+            "name": "Computer Store",
+            "tags": ["Capitalism", "Computers", "Bank"],
+            "type": "Web development",
+            "skills": ["Angular", "Java"]
+        },
+        {
+            "id": 3,
+            "name": "New iTunes",
+            "tags": ["Songs", "Music"],
+            "type": "Music",
+            "skills": ["Guitar", "Drums"]
+        },
+        {
+            "id": 4,
+            "name": "New IMDB",
+            "tags": ["Reviews", "Movies", "Actors"],
+            "type": "Film",
+            "skills": ["Acting", "Fake crying"]
+        }
+    ],
+    "user": {
+        "id": 1,
+        "skills": ["Fake crying", "Java", "Javascript"]
+    }
+}
