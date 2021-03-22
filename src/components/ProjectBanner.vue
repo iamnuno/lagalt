@@ -21,23 +21,10 @@
 
 <script>
 export default {
-  // TODO: use props instead of hardcoded data
-  data() {
-    return {
-      project: {
-        id: 1,
-        name: "Lost in Translation",
-        tags: ["Translation", "Sign Language", "English"],
-        type: "Web development",
-        skills: ["Javascript", "Vue", "HTML", "CSS"],
-      },
-      user: {
-        skills: ["Vue", "Javascript", "CSS"],
-      },
-    };
-  },
+  props: ["project", "user"],
   computed: {
     projectInitials() {
+      console.log("computed", this.project);
       let initials = "";
 
       const nameArray = this.project.name.split(" ");
@@ -53,6 +40,10 @@ export default {
       alert(`Navigate to project id: ${this.project.id}`);
     },
   },
+  mounted() {
+    console.log("name", this.project.name);
+    console.log("user skills", this.user.skills);
+  },
 };
 </script>
 
@@ -65,6 +56,7 @@ export default {
   background-color: #fdfffc;
   display: flex;
   justify-content: center;
+  align-items: start;
   flex-wrap: wrap;
   border-radius: 10px;
   transition: box-shadow 0.3s;
@@ -80,10 +72,11 @@ export default {
   padding: 0;
   display: flex;
   flex-wrap: wrap;
+  width: 100%;
 }
 
 .initials {
-  margin: auto;
+  margin: 1em;
   width: 3em;
   height: 3em;
   background-color: #d1495b;
@@ -95,12 +88,14 @@ export default {
 
 .name {
   margin: auto;
+  width: 20%;
 }
 
 .tags {
   margin: auto;
   display: flex;
   flex-wrap: wrap;
+  width: 30%;
 }
 
 .tags span {
@@ -115,6 +110,7 @@ export default {
   margin: auto;
   display: flex;
   flex-wrap: wrap;
+  flex-grow: 1;
 }
 
 .skills span {
@@ -128,7 +124,10 @@ span {
 }
 
 .type {
-  margin: auto;
+  margin: 1em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .match_skill {
