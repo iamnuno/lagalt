@@ -14,17 +14,15 @@ export default {
   props: ["commit"],
   data() {
     return {
-      message: this.commit.commit.message,
-      username: this.commit.commit.author.name,
-      date: this.commit.commit.author.date,
+      message: "",
+      username: "",
+      date: "",
     };
   },
   created() {
     this.message = this.commit.commit.message;
     this.username = this.commit.commit.author.name;
-    this.date = this.commit.commit.author.date;
-    console.log(this.commit.commit.message);
-    console.log(this.commit);
+    this.date = this.commit.commit.author.date.substring(0, 10);
   },
 };
 </script>
