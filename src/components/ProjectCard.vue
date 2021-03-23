@@ -1,10 +1,10 @@
 <template>
-  <div class="bg-light d-flex flex-column p-2 m-2 rounded shadow pb-3">
+  <div class="bg-light d-flex flex-column p-2 m-2 rounded pb-3 card">
     <div class="d-flex flex-row">
       <div class="flex-grow-1">{{ title }}</div>
       {{ date }}
     </div>
-    <div class="breakline" />
+    <div class="breakline my-1" />
     {{ text }}
   </div>
 </template>
@@ -28,5 +28,15 @@ export default {
   background-color: rgba(119, 119, 119, 0.418);
   padding-top: 1px;
   margin-top: 1px;
+}
+
+.card:hover {
+  box-shadow: 0 0 11px rgba(33, 33, 33, 1);
+}
+
+.card {
+  font-size: 10px;
+  transition: box-shadow 0.2s;
+  box-shadow: 0 0 11px rgba(33, 33, 33, 0.2);
 }
 </style>
