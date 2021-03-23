@@ -25,7 +25,8 @@
                     "date": "18/03/2021",
                     "text": "This is the announcement body"
                 }
-            ]
+            ],
+            "repo": "https://api.github.com/repos/iamnuno/lagalt/commits"
         },
         {
             "id": 2,
