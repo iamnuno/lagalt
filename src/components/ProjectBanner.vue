@@ -49,14 +49,12 @@ export default {
 
 <style scoped>
 .card {
-  width: 95%;
-  height: 15%;
   margin: 1em;
   font-size: 0.8rem;
   background-color: #fdfffc;
   display: flex;
   justify-content: center;
-  align-items: start;
+  align-items: flex-start;
   flex-wrap: wrap;
   border-radius: 10px;
   transition: box-shadow 0.3s;
@@ -125,6 +123,7 @@ span {
 
 .type {
   margin: 1em;
+  margin-right: 2em;
   display: flex;
   justify-content: center;
   align-items: center;
