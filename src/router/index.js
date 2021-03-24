@@ -1,14 +1,16 @@
-import Home from '../views/Home'
-import VueRouter from 'vue-router'
-import Vue from 'vue'
+import Home from '../views/Home';
+import UserProfile from '../views/UserProfile';
+import VueRouter from 'vue-router';
+import Vue from 'vue';
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
 const routes = [
-    { path: "/", name: "Home", component: Home }
-]
+    { path: '/', name: 'Home', component: Home },
+    { path: '/profile', name: 'Profile', component: UserProfile },
+];
 
 export const router = new VueRouter({
     mode: 'history',
-    routes
-})
+    routes,
+});
