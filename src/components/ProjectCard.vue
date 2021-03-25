@@ -1,6 +1,6 @@
 <template>
   <div class="bg-light d-flex flex-column p-2 m-2 rounded pb-3 card">
-    <div class="d-flex flex-row">
+    <div class="d-flex flex-row text-truncate">
       <div class="flex-grow-1">{{ title }}</div>
       {{ date }}
     </div>
