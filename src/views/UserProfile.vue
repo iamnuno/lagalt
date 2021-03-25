@@ -293,7 +293,6 @@ export default {
   data() {
     return {
       user: null,
-      //newSkill: "",
       java: false,
       javascript: false,
       frontend: false,
