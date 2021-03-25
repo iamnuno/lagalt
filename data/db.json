@@ -6,6 +6,8 @@
             "tags": ["Translation", "Sign Language", "English"],
             "type": "Web development",
             "skills": ["Javascript", "Vue", "HTML", "CSS"],
+            "photos":[
+                "https://www.meme-arsenal.com/memes/d1229a2baa8f9876fd034ba6c2601026.jpg", "https://i.pinimg.com/originals/36/ab/81/36ab81cd8d63cf7c4a08f39403698c77.jpg"],
             "announcements": [
                 {
                     "id":1,
@@ -21,6 +23,24 @@
                 },
                 {
                     "id":3,
+                    "title": "Title",
+                    "date": "18/03/2021",
+                    "text": "This is the announcement body"
+                },
+                {
+                    "id":4,
+                    "title": "Title",
+                    "date": "18/03/2021",
+                    "text": "This is the announcement body"
+                },
+                {
+                    "id":5,
+                    "title": "Title",
+                    "date": "18/03/2021",
+                    "text": "This is the announcement body"
+                },
+                {
+                    "id":6,
                     "title": "Title",
                     "date": "18/03/2021",
                     "text": "This is the announcement body"
