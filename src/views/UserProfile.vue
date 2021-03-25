@@ -101,7 +101,7 @@
                                   v-model="vue"
                                   :disabled="!isEditing"
                                 />
-                                <label>Vue</label>
+                                <label class="ml-2">Vue</label>
                               </div>
                               <div>
                                 <input
