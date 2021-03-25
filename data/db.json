@@ -36,6 +36,6 @@
         "email": "ahmad@me.com",
         "visibility": false,
         "portfolio": "This is the user portfolio, it will surely have useful information",
-        "skills": ["Fake crying", "Java", "Javascript"]
+        "skills": []
     }
 }

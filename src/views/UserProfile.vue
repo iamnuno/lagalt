@@ -76,46 +76,179 @@
                         <!-- Skills -->
                         <div class="col-sm-12 mt-3">
                           <span class="m-b-10 f-w-600">Skills</span><br />
-                          <div
-                            class="skills mt-2"
-                            v-for="skill in user.skills"
-                            :key="skill"
-                          >
-                            <font-awesome-icon
-                              :icon="['fas', 'times-circle']"
-                              size="1x"
-                              class="delete_skill"
-                              :class="{ delete_skill_edit: isEditing }"
-                              @click="removeSkill(skill)"
-                            />
-                            <span
-                              class="text-muted f-w-400"
-                              :class="{ skill: isEditing }"
-                            >
-                              {{ skill }}
-                            </span>
-                          </div>
-                          <p
-                            v-if="user.skills.length === 0"
-                            class="text-muted f-w-400"
-                          >
-                            No skills yet!
-                          </p>
-                          <!-- Add skills -->
-                          <div v-if="isEditing" class="mt-3 new-skill">
-                            <input
-                              type="text"
-                              v-model="newSkill"
-                              placeholder="New skill..."
-                            />
-
-                            <font-awesome-icon
-                              :icon="['fas', 'plus-circle']"
-                              size="2x"
-                              v-if="isEditing"
-                              @click="addSkill"
-                              class="add-skill"
-                            />
+                          <div class="row">
+                            <!-- Web dev skills -->
+                            <div class="col-sm-3 mt-3">
+                              <div>
+                                <input
+                                  type="checkbox"
+                                  v-model="java"
+                                  :disabled="!isEditing"
+                                />
+                                <label class="ml-2">Java</label>
+                              </div>
+                              <div>
+                                <input
+                                  type="checkbox"
+                                  v-model="javascript"
+                                  :disabled="!isEditing"
+                                />
+                                <label class="ml-2">Javascript</label>
+                              </div>
+                              <div>
+                                <input
+                                  type="checkbox"
+                                  v-model="vue"
+                                  :disabled="!isEditing"
+                                />
+                                <label>Vue</label>
+                              </div>
+                              <div>
+                                <input
+                                  type="checkbox"
+                                  v-model="frontend"
+                                  :disabled="!isEditing"
+                                />
+                                <label class="ml-2">Frontend</label>
+                              </div>
+                              <div>
+                                <input
+                                  type="checkbox"
+                                  v-model="backend"
+                                  :disabled="!isEditing"
+                                />
+                                <label class="ml-2">Backend</label>
+                              </div>
+                            </div>
+                            <!-- Game dev skills -->
+                            <div class="col-sm-3 mt-3">
+                              <div>
+                                <input
+                                  type="checkbox"
+                                  v-model="unity"
+                                  :disabled="!isEditing"
+                                />
+                                <label class="ml-2">Unity</label>
+                              </div>
+                              <div>
+                                <input
+                                  type="checkbox"
+                                  v-model="libgdx"
+                                  :disabled="!isEditing"
+                                />
+                                <label class="ml-2">LibGDX</label>
+                              </div>
+                              <div>
+                                <input
+                                  type="checkbox"
+                                  v-model="unreal"
+                                  :disabled="!isEditing"
+                                />
+                                <label class="ml-2">Unreal</label>
+                              </div>
+                              <div>
+                                <input
+                                  type="checkbox"
+                                  v-model="animations2D"
+                                  :disabled="!isEditing"
+                                />
+                                <label class="ml-2">Animations 2D</label>
+                              </div>
+                              <div>
+                                <input
+                                  type="checkbox"
+                                  v-model="animations3D"
+                                  :disabled="!isEditing"
+                                />
+                                <label class="ml-2">Animations 3D</label>
+                              </div>
+                            </div>
+                            <!-- Music skills -->
+                            <div class="col-sm-3 mt-3">
+                              <div>
+                                <input
+                                  type="checkbox"
+                                  v-model="guitar"
+                                  :disabled="!isEditing"
+                                />
+                                <label class="ml-2">Guitar</label>
+                              </div>
+                              <div>
+                                <input
+                                  type="checkbox"
+                                  v-model="drums"
+                                  :disabled="!isEditing"
+                                />
+                                <label class="ml-2">Drums</label>
+                              </div>
+                              <div>
+                                <input
+                                  type="checkbox"
+                                  v-model="piano"
+                                  :disabled="!isEditing"
+                                />
+                                <label class="ml-2">Piano</label>
+                              </div>
+                              <div>
+                                <input
+                                  type="checkbox"
+                                  v-model="vocals"
+                                  :disabled="!isEditing"
+                                />
+                                <label class="ml-2">Vocals</label>
+                              </div>
+                              <div>
+                                <input
+                                  type="checkbox"
+                                  v-model="violin"
+                                  :disabled="!isEditing"
+                                />
+                                <label class="ml-2">Violin</label>
+                              </div>
+                            </div>
+                            <!-- Film skills -->
+                            <div class="col-sm-3 mt-3">
+                              <div>
+                                <input
+                                  type="checkbox"
+                                  v-model="acting"
+                                  :disabled="!isEditing"
+                                />
+                                <label class="ml-2">Acting</label>
+                              </div>
+                              <div>
+                                <input
+                                  type="checkbox"
+                                  v-model="directing"
+                                  :disabled="!isEditing"
+                                />
+                                <label class="ml-2">Directing</label>
+                              </div>
+                              <div>
+                                <input
+                                  type="checkbox"
+                                  v-model="production"
+                                  :disabled="!isEditing"
+                                />
+                                <label class="ml-2">Production</label>
+                              </div>
+                              <div>
+                                <input
+                                  type="checkbox"
+                                  v-model="audioEditing"
+                                  :disabled="!isEditing"
+                                />
+                                <label class="ml-2">Audio editing</label>
+                              </div>
+                              <div>
+                                <input
+                                  type="checkbox"
+                                  v-model="videoEditing"
+                                  :disabled="!isEditing"
+                                />
+                                <label class="ml-2">Video editing</label>
+                              </div>
+                            </div>
                           </div>
                         </div>
                         <!-- Portfolio -->
@@ -160,7 +293,27 @@ export default {
   data() {
     return {
       user: null,
-      newSkill: "",
+      //newSkill: "",
+      java: false,
+      javascript: false,
+      frontend: false,
+      backend: false,
+      vue: false,
+      unity: false,
+      libgdx: false,
+      unreal: false,
+      animations3D: false,
+      animations2D: false,
+      acting: false,
+      directing: false,
+      production: false,
+      videoEditing: false,
+      audioEditing: false,
+      drums: false,
+      guitar: false,
+      piano: false,
+      violin: false,
+      vocals: false,
       isEditing: false,
     };
   },
@@ -175,22 +328,184 @@ export default {
     editProfile() {
       this.isEditing = !this.isEditing;
     },
-    //TODO: http post request on save
     saveProfile() {
       this.isEditing = !this.isEditing;
+
+      this.updateWebDevSkills();
+      this.updateGameDevSkills();
+      this.updateMusicSkills();
+      this.updateFilmSkills();
+
+      // TODO: http post request on save
       alert(
         `Name: ${this.user.name}\nEmail: ${this.user.email}\nVisibility: ${this.user.visibility}\nSkills: ${this.user.skills}\nPortfolio: ${this.user.portfolio}\nDescription: ${this.user.description}`
       );
-      this.newSkill = "";
     },
-    addSkill() {
-      if (!this.user.skills.includes(this.newSkill) && this.newSkill) {
-        this.user.skills.push(this.newSkill);
+    // user skills are saved in user.skills
+    // check corresponding boolean in checkbox before adding/removing skill
+    updateWebDevSkills() {
+      if (this.java) {
+        if (!this.user.skills.includes("Java")) this.user.skills.push("Java");
+      } else {
+        if (this.user.skills.includes("Java"))
+          this.user.skills = this.user.skills.filter((x) => x !== "Java");
+      }
+
+      if (this.javascript) {
+        if (!this.user.skills.includes("Javascript"))
+          this.user.skills.push("Javascript");
+      } else {
+        if (this.user.skills.includes("Javascript"))
+          this.user.skills = this.user.skills.filter((x) => x !== "Javascript");
+      }
+
+      if (this.frontend) {
+        if (!this.user.skills.includes("Frontend"))
+          this.user.skills.push("Frontend");
+      } else {
+        if (this.user.skills.includes("Frontend"))
+          this.user.skills = this.user.skills.filter((x) => x !== "Frontend");
+      }
+
+      if (this.backend) {
+        if (!this.user.skills.includes("Backend"))
+          this.user.skills.push("Backend");
+      } else {
+        if (this.user.skills.includes("Backend"))
+          this.user.skills = this.user.skills.filter((x) => x !== "Backend");
+      }
+
+      if (this.vue) {
+        if (!this.user.skills.includes("Vue")) this.user.skills.push("Vue");
+      } else {
+        if (this.user.skills.includes("Vue"))
+          this.user.skills = this.user.skills.filter((x) => x !== "Vue");
       }
     },
-    removeSkill(skill) {
-      if (this.isEditing) {
-        this.user.skills = this.user.skills.filter((x) => skill !== x);
+    updateGameDevSkills() {
+      if (this.unity) {
+        if (!this.user.skills.includes("Unity")) this.user.skills.push("Unity");
+      } else {
+        if (this.user.skills.includes("Unity"));
+      }
+
+      if (this.unreal) {
+        if (!this.user.skills.includes("Unreal"))
+          this.user.skills.push("Unreal");
+      } else {
+        if (this.user.skills.includes("Unreal"))
+          this.user.skills = this.user.skills.filter((x) => x !== "Unreal");
+      }
+
+      if (this.libgdx) {
+        if (!this.user.skills.includes("LibGDX"))
+          this.user.skills.push("LibGDX");
+      } else {
+        if (this.user.skills.includes("LibGDX"))
+          this.user.skills = this.user.skills.filter((x) => x !== "LibGDX");
+      }
+
+      if (this.animations2D) {
+        if (!this.user.skills.includes("Animations 2D"))
+          this.user.skills.push("Animations 2D");
+      } else {
+        if (this.user.skills.includes("Animations 2D"))
+          this.user.skills = this.user.skills.filter(
+            (x) => x !== "Animations 2D"
+          );
+      }
+
+      if (this.animations3D) {
+        if (!this.user.skills.includes("Animations 3D"))
+          this.user.skills.push("Animations 3D");
+      } else {
+        if (this.user.skills.includes("Animations 3D"))
+          this.user.skills = this.user.skills.filter(
+            (x) => x !== "Animations 3D"
+          );
+      }
+    },
+    updateMusicSkills() {
+      if (this.guitar) {
+        if (!this.user.skills.includes("Guitar"))
+          this.user.skills.push("Guitar");
+      } else {
+        if (this.user.skills.includes("Guitar"))
+          this.user.skills = this.user.skills.filter((x) => x !== "Guitar");
+      }
+
+      if (this.drums) {
+        if (!this.user.skills.includes("Drums")) this.user.skills.push("Drums");
+      } else {
+        if (this.user.skills.includes("Drums"))
+          this.user.skills = this.user.skills.filter((x) => x !== "Drums");
+      }
+
+      if (this.piano) {
+        if (!this.user.skills.includes("Piano")) this.user.skills.push("Piano");
+      } else {
+        if (this.user.skills.includes("Piano"))
+          this.user.skills = this.user.skills.filter((x) => x !== "Piano");
+      }
+
+      if (this.vocals) {
+        if (!this.user.skills.includes("Vocals"))
+          this.user.skills.push("Vocals");
+      } else {
+        if (this.user.skills.includes("Vocals"))
+          this.user.skills = this.user.skills.filter((x) => x !== "Vocals");
+      }
+
+      if (this.violin) {
+        if (!this.user.skills.includes("Violin"))
+          this.user.skills.push("Violin");
+      } else {
+        if (this.user.skills.includes("Violin"))
+          this.user.skills = this.user.skills.filter((x) => x !== "Violin");
+      }
+    },
+    updateFilmSkills() {
+      if (this.acting) {
+        if (!this.user.skills.includes("Acting"))
+          this.user.skills.push("Acting");
+      } else {
+        if (this.user.skills.includes("Acting"))
+          this.user.skills = this.user.skills.filter((x) => x !== "Acting");
+      }
+
+      if (this.directing) {
+        if (!this.user.skills.includes("Directing"))
+          this.user.skills.push("Directing");
+      } else {
+        if (this.user.skills.includes("Directing"))
+          this.user.skills = this.user.skills.filter((x) => x !== "Directing");
+      }
+
+      if (this.production) {
+        if (!this.user.skills.includes("Piano")) this.user.skills.push("Piano");
+      } else {
+        if (this.user.skills.includes("Production"))
+          this.user.skills = this.user.skills.filter((x) => x !== "Piano");
+      }
+
+      if (this.audioEditing) {
+        if (!this.user.skills.includes("Audio editing"))
+          this.user.skills.push("Audio editing");
+      } else {
+        if (this.user.skills.includes("Audio editing"))
+          this.user.skills = this.user.skills.filter(
+            (x) => x !== "Audio editing"
+          );
+      }
+
+      if (this.videoEditing) {
+        if (!this.user.skills.includes("Video editing"))
+          this.user.skills.push("Video editing");
+      } else {
+        if (this.user.skills.includes("Video editing"))
+          this.user.skills = this.user.skills.filter(
+            (x) => x !== "Video editing"
+          );
       }
     },
   },
@@ -358,19 +673,6 @@ h6 {
   justify-content: space-between;
 }
 
-.skills {
-  display: inline-flex;
-}
-
-.skills span {
-  background-color: rgb(126, 207, 247);
-  margin-right: 1em;
-  border-radius: 15px;
-  padding: 0.5em;
-  color: white !important;
-  display: inline-block;
-}
-
 textarea.description {
   border-style: none;
   border-color: Transparent;
@@ -401,74 +703,5 @@ textarea.portfolio_edit {
 
 textarea:focus {
   outline: none;
-}
-
-.skills {
-  display: inline-flex;
-  flex-direction: row-reverse;
-}
-
-.delete_skill {
-  display: none;
-  position: relative;
-  right: 20px;
-  color: #f25f5c;
-}
-
-.delete_skill_edit {
-  display: block;
-}
-
-.delete_skill_edit:hover {
-  cursor: pointer;
-}
-
-.delete_skill:hover ~ .skill {
-  animation: shake 1s;
-  animation-iteration-count: infinite;
-}
-
-@keyframes shake {
-  10%,
-  90% {
-    transform: translate3d(-1px, 0, 0);
-  }
-
-  20%,
-  80% {
-    transform: translate3d(2px, 0, 0);
-  }
-
-  30%,
-  50%,
-  70% {
-    transform: translate3d(-4px, 0, 0);
-  }
-
-  40%,
-  60% {
-    transform: translate3d(4px, 0, 0);
-  }
-}
-
-.new-skill {
-  display: flex;
-  align-items: center;
-}
-
-.new-skill input {
-  outline: 0;
-  border-width: 0 0 2px;
-  border-color: rgb(126, 207, 247);
-}
-
-.add-skill {
-  margin-left: 0.1em;
-  color: rgb(126, 207, 247);
-  filter: drop-shadow(0px 0px 1px rgb(126, 207, 247));
-}
-
-.add-skill:hover {
-  cursor: pointer;
 }
 </style>
