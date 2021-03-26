@@ -98,11 +98,13 @@
         >
           <div class="h4 text-center p-1 text-truncate mb-1">Collaborators</div>
           <div class="breakline mx-2" />
-          <UserCard
-            v-for="(collaborator, index) in collaborators"
-            :key="index"
-            :name="collaborator.name"
-          />
+          <div class="scorllable scrollbar m-2 rounded">
+            <UserCard
+              v-for="(collaborator, index) in collaborators"
+              :key="index"
+              :name="collaborator.name"
+            />
+          </div>
         </div>
         <!-- PHOTOS -->
         <div class="flex-grow-1 d-flex flex-column">
@@ -258,5 +260,31 @@ export default {
 .bttn:hover {
   box-shadow: 0 0 11px rgba(0, 0, 0, 0.486) !important;
   transition: box-shadow 0.1s linear;
+}
+
+.scorllable {
+  height: 300px;
+  overflow-y: scroll;
+}
+
+.scrollbar::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+  background-color: #f5f5f5;
+  border-radius: 10px;
+}
+
+.scrollbar::-webkit-scrollbar {
+  width: 12px;
+  background-color: #f5f5f5;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+  background-color: gray;
+}
+
+.scrollbar {
+  scrollbar-color: #512da8 #f5f5f5;
 }
 </style>
