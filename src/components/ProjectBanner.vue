@@ -6,7 +6,7 @@
       <div class="tags">
         <span v-for="tag in project.tags" :key="tag">{{ tag }}</span>
       </div>
-      <div class="skills mt-5">
+      <div class="skills">
         <span
           v-for="skill in project.skills"
           :key="skill"
