@@ -2,9 +2,9 @@
   <div class="d-flex justify-content-center align-items-center flex-grow-1">
     <div
       v-if="user"
-      class="d-flex flex-lg-row flex-column justify-content-between shadow rounded m-5"
+      class="d-flex flex-lg-row flex-column justify-content-between shadow rounded overflow-hidden m-5"
     >
-      <div class="bg-c-lite-green rounded-left">
+      <div class="bg-c-lite-green">
         <div class="card-block text-center text-white">
           <div>
             <!-- Profile icon-->
@@ -577,6 +577,7 @@ export default {
     from(#17a2b8),
     to(#90e0ef)
   );
+  margin-left: -1px;
   background: linear-gradient(to right, #17a2b8, #90e0ef);
 }
 
