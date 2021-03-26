@@ -1,284 +1,305 @@
 <template>
-  <div class="content">
-    <div v-if="user">
-      <div class="page-content page-container" id="page-content">
-        <div class="padding">
-          <div class="row container d-flex justify-content-center">
-            <div class="card user-card-full">
-              <div class="row m-l-0 m-r-0">
-                <div class="col-sm-4 bg-c-lite-green user-profile">
-                  <div class="card-block text-center text-white">
-                    <div class="m-b-25">
-                      <!-- Profile icon-->
-                      <img
-                        src="../assets/user.png"
-                        class="img-radius"
-                        alt="User-Profile-Image"
-                      />
-                    </div>
-                    <!-- User description -->
-                    <h5 class="f-w-600">{{ user.name }}</h5>
-                    <textarea
-                      v-model="user.description"
-                      :disabled="!isEditing"
-                      class="description"
-                      :class="{ textarea_edit: isEditing }"
-                      placeholder="Describe yourself here..."
-                    />
-                    <br />
-                    <!-- Edit icon-->
+  <div class="d-flex justify-content-center align-items-center flex-grow-1">
+    <div
+      v-if="user"
+      class="d-flex flex-lg-row flex-column justify-content-between shadow rounded m-5"
+    >
+      <div class="bg-c-lite-green rounded-left">
+        <div class="card-block text-center text-white">
+          <div>
+            <!-- Profile icon-->
+            <img
+              src="../assets/user.png"
+              class="img-radius pb-2"
+              alt="User-Profile-Image"
+            />
+          </div>
+          <!-- User description -->
+          <h5 class="f-w-600">{{ user.name }}</h5>
+          <textarea
+            v-model="user.description"
+            :disabled="!isEditing"
+            class="description"
+            :class="{ textarea_edit: isEditing }"
+            placeholder="Describe yourself here..."
+          />
+          <br />
+          <!-- Edit icon-->
+          <div v-if="!isEditing" class="mt-3 icon" @click="editProfile()">
+            <font-awesome-icon :icon="['fas', 'edit']" size="2x" />
+            <span lass="ml-3">Edit profile</span>
+          </div>
+          <!-- Save icon-->
+          <div v-else class="mt-3 icon" @click="saveProfile()">
+            <font-awesome-icon :icon="['fas', 'save']" size="2x" />
+            <span class="ml-1">Save profile</span>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="card-block">
+          <h6 class="m-b-20 p-b-5 b-b-default f-w-600">Information</h6>
+          <div class="wrapper">
+            <div class="row h-50">
+              <!-- Visibility checkbox -->
+              <div class="col-sm-6">
+                <p class="m-b-10 f-w-600">Visibility</p>
+                <input
+                  type="checkbox"
+                  id="profileVisibility"
+                  :disabled="!isEditing"
+                  v-model="user.visibility"
+                />
+                <label class="ml-2" for="profileVisibility"
+                  >Public profile</label
+                >
+              </div>
+              <!-- Email label -->
+              <div class="col-sm-6">
+                <div>
+                  <p class="m-b-10 f-w-600">Email</p>
+                  <label class="text-muted f-w-400">{{ user.email }}</label>
+                </div>
+              </div>
+            </div>
+            <div class="">
+              <!-- Skills -->
+              <div class="mt-3">
+                <span class="m-b-10 f-w-600">Skills</span><br />
+                <div class="d-flex flex-column flex-md-row flex-lg-row">
+                  <!-- Web dev skills -->
+                  <div class="col-sm-3 mt-3">
                     <div
-                      v-if="!isEditing"
-                      class="mt-3 icon"
-                      @click="editProfile()"
+                      class="d-flex flex-row flex-nowrap justify-content-start align-items-center text-nowrap mx-2"
                     >
-                      <font-awesome-icon :icon="['fas', 'edit']" size="2x" />
-                      <span lass="ml-3">Edit profile</span>
+                      <input
+                        type="checkbox"
+                        v-model="java"
+                        :disabled="!isEditing"
+                      />
+                      <label class="ml-2">Java</label>
                     </div>
-                    <!-- Save icon-->
-                    <div v-else class="mt-3 icon" @click="saveProfile()">
-                      <font-awesome-icon :icon="['fas', 'save']" size="2x" />
-                      <span class="ml-1">Save profile</span>
+                    <div
+                      class="d-flex flex-row flex-nowrap justify-content-start align-items-center text-nowrap mx-2"
+                    >
+                      <input
+                        type="checkbox"
+                        v-model="javascript"
+                        :disabled="!isEditing"
+                      />
+                      <label class="ml-2">Javascript</label>
+                    </div>
+                    <div
+                      class="d-flex flex-row flex-nowrap justify-content-start align-items-center text-nowrap mx-2"
+                    >
+                      <input
+                        type="checkbox"
+                        v-model="vue"
+                        :disabled="!isEditing"
+                      />
+                      <label class="ml-2">Vue</label>
+                    </div>
+                    <div
+                      class="d-flex flex-row flex-nowrap justify-content-start align-items-center text-nowrap mx-2"
+                    >
+                      <input
+                        type="checkbox"
+                        v-model="frontend"
+                        :disabled="!isEditing"
+                      />
+                      <label class="ml-2">Frontend</label>
+                    </div>
+                    <div
+                      class="d-flex flex-row flex-nowrap justify-content-start align-items-center text-nowrap mx-2"
+                    >
+                      <input
+                        type="checkbox"
+                        v-model="backend"
+                        :disabled="!isEditing"
+                      />
+                      <label class="ml-2">Backend</label>
+                    </div>
+                  </div>
+                  <!-- Game dev skills -->
+                  <div class="col-sm-3 mt-3">
+                    <div
+                      class="d-flex flex-row flex-nowrap justify-content-start align-items-center text-nowrap mx-2"
+                    >
+                      <input
+                        type="checkbox"
+                        v-model="unity"
+                        :disabled="!isEditing"
+                      />
+                      <label class="ml-2">Unity</label>
+                    </div>
+                    <div
+                      class="d-flex flex-row flex-nowrap justify-content-start align-items-center text-nowrap mx-2"
+                    >
+                      <input
+                        type="checkbox"
+                        v-model="libgdx"
+                        :disabled="!isEditing"
+                      />
+                      <label class="ml-2">LibGDX</label>
+                    </div>
+                    <div
+                      class="d-flex flex-row flex-nowrap justify-content-start align-items-center text-nowrap mx-2"
+                    >
+                      <input
+                        type="checkbox"
+                        v-model="unreal"
+                        :disabled="!isEditing"
+                      />
+                      <label class="ml-2">Unreal</label>
+                    </div>
+                    <div
+                      class="d-flex flex-row flex-nowrap justify-content-start align-items-center text-nowrap mx-2"
+                    >
+                      <input
+                        type="checkbox"
+                        v-model="animations2D"
+                        :disabled="!isEditing"
+                      />
+                      <label class="ml-2">Animations 2D</label>
+                    </div>
+                    <div
+                      class="d-flex flex-row flex-nowrap justify-content-start align-items-center text-nowrap mx-2"
+                    >
+                      <input
+                        type="checkbox"
+                        v-model="animations3D"
+                        :disabled="!isEditing"
+                      />
+                      <label class="ml-2">Animations 3D</label>
+                    </div>
+                  </div>
+                  <!-- Music skills -->
+                  <div class="col-sm-3 mt-3">
+                    <div
+                      class="d-flex flex-row flex-nowrap justify-content-start align-items-center text-nowrap mx-2"
+                    >
+                      <input
+                        type="checkbox"
+                        v-model="guitar"
+                        :disabled="!isEditing"
+                      />
+                      <label class="ml-2">Guitar</label>
+                    </div>
+                    <div
+                      class="d-flex flex-row flex-nowrap justify-content-start align-items-center text-nowrap mx-2"
+                    >
+                      <input
+                        type="checkbox"
+                        v-model="drums"
+                        :disabled="!isEditing"
+                      />
+                      <label class="ml-2">Drums</label>
+                    </div>
+                    <div
+                      class="d-flex flex-row flex-nowrap justify-content-start align-items-center text-nowrap mx-2"
+                    >
+                      <input
+                        type="checkbox"
+                        v-model="piano"
+                        :disabled="!isEditing"
+                      />
+                      <label class="ml-2">Piano</label>
+                    </div>
+                    <div
+                      class="d-flex flex-row flex-nowrap justify-content-start align-items-center text-nowrap mx-2"
+                    >
+                      <input
+                        type="checkbox"
+                        v-model="vocals"
+                        :disabled="!isEditing"
+                      />
+                      <label class="ml-2">Vocals</label>
+                    </div>
+                    <div
+                      class="d-flex flex-row flex-nowrap justify-content-start align-items-center text-nowrap mx-2"
+                    >
+                      <input
+                        type="checkbox"
+                        v-model="violin"
+                        :disabled="!isEditing"
+                      />
+                      <label class="ml-2">Violin</label>
+                    </div>
+                  </div>
+                  <!-- Film skills -->
+                  <div class="col-sm-3 mt-3">
+                    <div
+                      class="d-flex flex-row flex-nowrap justify-content-start align-items-center text-nowrap mx-2"
+                    >
+                      <input
+                        type="checkbox"
+                        v-model="acting"
+                        :disabled="!isEditing"
+                      />
+                      <label class="ml-2">Acting</label>
+                    </div>
+                    <div
+                      class="d-flex flex-row flex-nowrap justify-content-start align-items-center text-nowrap mx-2"
+                    >
+                      <input
+                        type="checkbox"
+                        v-model="directing"
+                        :disabled="!isEditing"
+                      />
+                      <label class="ml-2">Directing</label>
+                    </div>
+                    <div
+                      class="d-flex flex-row flex-nowrap justify-content-start align-items-center text-nowrap mx-2"
+                    >
+                      <input
+                        type="checkbox"
+                        v-model="production"
+                        :disabled="!isEditing"
+                        v-text="production"
+                      />
+                      <label class="ml-2">Production</label>
+                    </div>
+                    <div
+                      class="d-flex flex-row flex-nowrap justify-content-start align-items-center text-nowrap mx-2"
+                    >
+                      <input
+                        type="checkbox"
+                        v-model="audioEditing"
+                        :disabled="!isEditing"
+                      />
+                      <label class="ml-2">Audio editing</label>
+                    </div>
+                    <div
+                      class="d-flex flex-row flex-nowrap justify-content-start align-items-center text-nowrap mx-2"
+                    >
+                      <input
+                        type="checkbox"
+                        v-model="videoEditing"
+                        :disabled="!isEditing"
+                      />
+                      <label class="ml-2 my-2">Video editing</label>
                     </div>
                   </div>
                 </div>
-                <div class="col-sm-8">
-                  <div class="card-block">
-                    <h6 class="m-b-20 p-b-5 b-b-default f-w-600">
-                      Information
-                    </h6>
-                    <div class="wrapper">
-                      <div class="row h-50">
-                        <!-- Visibility checkbox -->
-                        <div class="col-sm-6">
-                          <p class="m-b-10 f-w-600">Visibility</p>
-                          <input
-                            type="checkbox"
-                            id="profileVisibility"
-                            :disabled="!isEditing"
-                            v-model="user.visibility"
-                          />
-                          <label class="ml-2" for="profileVisibility"
-                            >Public profile</label
-                          >
-                        </div>
-                        <!-- Email label -->
-                        <div class="col-sm-6">
-                          <div>
-                            <p class="m-b-10 f-w-600">Email</p>
-                            <label class="text-muted f-w-400">{{
-                              user.email
-                            }}</label>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="row">
-                        <!-- Skills -->
-                        <div class="col-sm-12 mt-3">
-                          <span class="m-b-10 f-w-600">Skills</span><br />
-                          <div class="row">
-                            <!-- Web dev skills -->
-                            <div class="col-sm-3 mt-3">
-                              <div>
-                                <input
-                                  type="checkbox"
-                                  v-model="java"
-                                  :disabled="!isEditing"
-                                />
-                                <label class="ml-2">Java</label>
-                              </div>
-                              <div>
-                                <input
-                                  type="checkbox"
-                                  v-model="javascript"
-                                  :disabled="!isEditing"
-                                />
-                                <label class="ml-2">Javascript</label>
-                              </div>
-                              <div>
-                                <input
-                                  type="checkbox"
-                                  v-model="vue"
-                                  :disabled="!isEditing"
-                                />
-                                <label class="ml-2">Vue</label>
-                              </div>
-                              <div>
-                                <input
-                                  type="checkbox"
-                                  v-model="frontend"
-                                  :disabled="!isEditing"
-                                />
-                                <label class="ml-2">Frontend</label>
-                              </div>
-                              <div>
-                                <input
-                                  type="checkbox"
-                                  v-model="backend"
-                                  :disabled="!isEditing"
-                                />
-                                <label class="ml-2">Backend</label>
-                              </div>
-                            </div>
-                            <!-- Game dev skills -->
-                            <div class="col-sm-3 mt-3">
-                              <div>
-                                <input
-                                  type="checkbox"
-                                  v-model="unity"
-                                  :disabled="!isEditing"
-                                />
-                                <label class="ml-2">Unity</label>
-                              </div>
-                              <div>
-                                <input
-                                  type="checkbox"
-                                  v-model="libgdx"
-                                  :disabled="!isEditing"
-                                />
-                                <label class="ml-2">LibGDX</label>
-                              </div>
-                              <div>
-                                <input
-                                  type="checkbox"
-                                  v-model="unreal"
-                                  :disabled="!isEditing"
-                                />
-                                <label class="ml-2">Unreal</label>
-                              </div>
-                              <div>
-                                <input
-                                  type="checkbox"
-                                  v-model="animations2D"
-                                  :disabled="!isEditing"
-                                />
-                                <label class="ml-2">Animations 2D</label>
-                              </div>
-                              <div>
-                                <input
-                                  type="checkbox"
-                                  v-model="animations3D"
-                                  :disabled="!isEditing"
-                                />
-                                <label class="ml-2">Animations 3D</label>
-                              </div>
-                            </div>
-                            <!-- Music skills -->
-                            <div class="col-sm-3 mt-3">
-                              <div>
-                                <input
-                                  type="checkbox"
-                                  v-model="guitar"
-                                  :disabled="!isEditing"
-                                />
-                                <label class="ml-2">Guitar</label>
-                              </div>
-                              <div>
-                                <input
-                                  type="checkbox"
-                                  v-model="drums"
-                                  :disabled="!isEditing"
-                                />
-                                <label class="ml-2">Drums</label>
-                              </div>
-                              <div>
-                                <input
-                                  type="checkbox"
-                                  v-model="piano"
-                                  :disabled="!isEditing"
-                                />
-                                <label class="ml-2">Piano</label>
-                              </div>
-                              <div>
-                                <input
-                                  type="checkbox"
-                                  v-model="vocals"
-                                  :disabled="!isEditing"
-                                />
-                                <label class="ml-2">Vocals</label>
-                              </div>
-                              <div>
-                                <input
-                                  type="checkbox"
-                                  v-model="violin"
-                                  :disabled="!isEditing"
-                                />
-                                <label class="ml-2">Violin</label>
-                              </div>
-                            </div>
-                            <!-- Film skills -->
-                            <div class="col-sm-3 mt-3">
-                              <div>
-                                <input
-                                  type="checkbox"
-                                  v-model="acting"
-                                  :disabled="!isEditing"
-                                />
-                                <label class="ml-2">Acting</label>
-                              </div>
-                              <div>
-                                <input
-                                  type="checkbox"
-                                  v-model="directing"
-                                  :disabled="!isEditing"
-                                />
-                                <label class="ml-2">Directing</label>
-                              </div>
-                              <div>
-                                <input
-                                  type="checkbox"
-                                  v-model="production"
-                                  :disabled="!isEditing"
-                                />
-                                <label class="ml-2">Production</label>
-                              </div>
-                              <div>
-                                <input
-                                  type="checkbox"
-                                  v-model="audioEditing"
-                                  :disabled="!isEditing"
-                                />
-                                <label class="ml-2">Audio editing</label>
-                              </div>
-                              <div>
-                                <input
-                                  type="checkbox"
-                                  v-model="videoEditing"
-                                  :disabled="!isEditing"
-                                />
-                                <label class="ml-2">Video editing</label>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <!-- Portfolio -->
-                        <div class="col-sm-12 mt-4">
-                          <p class="m-b-10 f-w-600">Portfolio</p>
-                          <textarea
-                            v-model="user.portfolio"
-                            :disabled="!isEditing"
-                            :class="{ portfolio_edit: isEditing }"
-                            class="text-muted f-w-400 portfolio"
-                            placeholder="Portfolio information here..."
-                          >
-                          </textarea>
-                        </div>
-                        <div class="col-sm-12 mt-3">
-                          <p class="m-b-10 f-w-600">Project Applications</p>
-                          <h6
-                            v-if="user.applications"
-                            class="text-muted f-w-400"
-                          >
-                            {{ user.applications }}
-                          </h6>
-                          <h6 v-else class="text-muted f-w-400">
-                            No applications yet
-                          </h6>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+              </div>
+              <!-- Portfolio -->
+              <div class="col-sm-12 mt-4">
+                <p class="m-b-10 f-w-600">Portfolio</p>
+                <textarea
+                  v-model="user.portfolio"
+                  :disabled="!isEditing"
+                  :class="{ portfolio_edit: isEditing }"
+                  class="text-muted f-w-400 portfolio"
+                  placeholder="Portfolio information here..."
+                >
+                </textarea>
+              </div>
+              <div class="col-sm-12 mt-3">
+                <p class="m-b-10 f-w-600">Project Applications</p>
+                <h6 v-if="user.applications" class="text-muted f-w-400">
+                  {{ user.applications }}
+                </h6>
+                <h6 v-else class="text-muted f-w-400">No applications yet</h6>
               </div>
             </div>
           </div>
@@ -514,8 +535,10 @@ export default {
 <style scoped>
 .content {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  flex-grow: 1;
 }
 
 .padding {
@@ -572,9 +595,9 @@ export default {
 .img-radius {
   border-radius: 5px;
   filter: drop-shadow(0px 0px 2px blue);
-}
-
-img {
+  background-repeat: no-repeat;
+  background-size: cover !important;
+  max-width: 250px;
   width: 75%;
 }
 
@@ -600,10 +623,6 @@ h6 {
   border-bottom: 1px solid #e0e0e0;
 }
 
-.m-b-20 {
-  margin-bottom: 20px;
-}
-
 .p-b-5 {
   padding-bottom: 5px !important;
 }
@@ -620,28 +639,12 @@ h6 {
   color: #919aa3 !important;
 }
 
-.b-b-default {
-  border-bottom: 1px solid #e0e0e0;
-}
-
 .f-w-600 {
   font-weight: 600;
 }
 
 .m-b-20 {
   margin-bottom: 20px;
-}
-
-.m-t-40 {
-  margin-top: 20px;
-}
-
-.p-b-5 {
-  padding-bottom: 5px !important;
-}
-
-.m-b-10 {
-  margin-bottom: 10px;
 }
 
 .m-t-40 {
@@ -670,6 +673,7 @@ h6 {
 .row {
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
 }
 
 textarea.description {
@@ -683,8 +687,6 @@ textarea.description {
 }
 
 textarea.textarea_edit {
-  color: black;
-  box-shadow: 0 0 3px rgb(126, 207, 247);
   resize: both;
 }
 
@@ -695,7 +697,8 @@ textarea.portfolio {
   border-color: Transparent;
 }
 
-textarea.portfolio_edit {
+textarea.portfolio_edit,
+textarea.textarea_edit {
   color: black;
   box-shadow: 0 0 3px rgb(126, 207, 247);
 }
