@@ -8,7 +8,7 @@
         </div>
       </div>
 
-      <form action="" @submit="addProject">
+      <form action="" @submit.prevent="addProject">
         <div class="row p-3">
           <div class="col-md-6">
             <!-- title -->
@@ -16,7 +16,7 @@
               class="form-group"
               :class="{ 'form-group--error': $v.title.$error }"
             >
-              <label class="form-label">Project title</label>
+              <label class="form-label">Project Title</label>
               <input
                 class="form-field"
                 type="text"
@@ -53,7 +53,7 @@
           <div class="col-md-3">
             <!-- status -->
             <div class="form-group">
-              <label class="form-label">Project status</label><br />
+              <label class="form-label">Project Status</label><br />
               <label class="select">
                 <select v-model="status">
                   <option
@@ -83,7 +83,7 @@
               class="form-group"
               :class="{ 'form-group--error': $v.description.$error }"
             >
-              <label class="form-label">Project description</label>
+              <label class="form-label">Project Description</label>
               <textarea
                 class="form-field"
                 type="text"
@@ -96,22 +96,33 @@
           </div>
           <div class="col-md-3">
             <!-- skills -->
-            <div class="form-group">
-              <div class="form-label">Project skills</div>
+            <div
+              class="form-group"
+              :class="{ 'form-group--error': $v.projectSkills.$error }"
+            >
+              <div class="form-label">Project Skills</div>
               <br />
               <div v-for="skill in availableSkills" :key="skill.name">
                 <SkillCheckbox
                   v-if="skill.industry == type"
                   :skill="skill"
-                  @updateUserSkills="updateUserSkills"
+                  @updateProjectSkills="updateProjectSkills"
                 />
+              </div>
+              <div v-if="!$v.projectSkills.required" class="error">
+                You need at least one skill
               </div>
             </div>
           </div>
           <div class="col-md-3">
             <!-- tags -->
             <div class="form-group">
-              <div class="form-label">Project tags</div>
+              <div
+                class="form-label"
+                :class="{ 'form-group--error': $v.projectTags.$error }"
+              >
+                Project Tags
+              </div>
               <br />
               <div v-for="tag in availableTags" :key="tag.name">
                 <TagCheckbox
@@ -119,6 +130,9 @@
                   :tag="tag"
                   @updateProjectTags="updateProjectTags"
                 />
+              </div>
+              <div v-if="!$v.projectTags.required" class="error">
+                You need at least one tag
               </div>
             </div>
           </div>
@@ -212,7 +226,7 @@ import { INDUSTRY, STATUS, SKILLS, TAGS } from "../constants/constants";
 import SkillCheckbox from "../components/SkillCheckbox";
 import TagCheckbox from "../components/TagCheckbox";
 
-import { required, url, minLength } from "vuelidate/lib/validators";
+import { required, url } from "vuelidate/lib/validators";
 
 export default {
   components: { SkillCheckbox, TagCheckbox },
@@ -226,7 +240,9 @@ export default {
       availableProjectTypes: INDUSTRY,
       type: "Web development",
       availableSkills: SKILLS,
+      projectSkills: [],
       availableTags: TAGS,
+      projectTags: [],
       externalUrl: "",
       backgroundUrl: "",
       photos: [],
@@ -240,7 +256,8 @@ export default {
     externalUrl: { url },
     backgroundUrl: { url },
     newPhotoUrl: { url },
-    userSkills: { minLength: minLength(1) },
+    projectSkills: { required },
+    projectTags: { required },
   },
   mounted() {
     this.availableSkills = this.availableSkills.map((x) => ({
@@ -256,55 +273,78 @@ export default {
     }));
   },
   computed: {
-    userSkills() {
-      let userSkills = [];
-
-      this.availableSkills.forEach((skill) => {
-        if (skill.hasSkill === true) userSkills.push(skill.name);
-      });
-
-      return userSkills;
-    },
-
-    projectTags() {
-      let projectTags = [];
-
-      this.availableTags.forEach((tag) => {
-        if (tag.hasTag === true) projectTags.push(tag.name);
-      });
-
-      return projectTags;
-    },
+    // userSkills() {
+    //   let userSkills = [];
+    //   this.availableSkills.forEach((skill) => {
+    //     if (skill.hasSkill === true) userSkills.push(skill.name);
+    //   });
+    //   return userSkills;
+    // },
+    // projectTags() {
+    //   let projectTags = [];
+    //   this.availableTags.forEach((tag) => {
+    //     if (tag.hasTag === true) projectTags.push(tag.name);
+    //   });
+    //   return projectTags;
+    // },
   },
   methods: {
-    addProject(e) {
-      e.preventDefault();
+    addProject() {
       // TODO: make HTTP POST request
       if (!this.$v.$invalid) {
         alert(
-          `Title: ${this.title}\nDescription: ${this.description}\nType: ${this.type}\nStatus: ${this.status}\nTags: ${this.projectTags}\nSkills: ${this.userSkills}\nExternal URL: ${this.externalUrl}\nBackground URL: ${this.backgroundUrl}\nPhotos: ${this.photos}`
+          `Title: ${this.title}\nDescription: ${this.description}\nType: ${this.type}\nStatus: ${this.status}\nTags: ${this.projectTags}\nSkills: ${this.projectSkills}\nExternal URL: ${this.externalUrl}\nBackground URL: ${this.backgroundUrl}\nPhotos: ${this.photos}`
         );
       } else {
         alert("Please fill the form correctly.");
       }
     },
-    updateUserSkills(e) {
+    updateProjectSkills(e) {
       this.availableSkills.forEach((skill) => {
         if (skill.name === e.name) skill.hasSkill = e.hasSkill;
+      });
+
+      this.availableSkills.forEach((skill) => {
+        if (
+          skill.hasSkill === true &&
+          !this.projectSkills.includes(skill.name)
+        ) {
+          this.projectSkills.push(skill.name);
+        }
+        if (
+          skill.hasSkill === false &&
+          this.projectSkills.includes(skill.name)
+        ) {
+          this.projectSkills = this.projectSkills.filter(
+            (x) => x !== skill.name
+          );
+        }
       });
     },
     updateProjectTags(e) {
       this.availableTags.forEach((tag) => {
         if (tag.name === e.name) tag.hasTag = e.hasTag;
       });
+
+      this.availableTags.forEach((tag) => {
+        if (tag.hasTag === true && !this.projectTags.includes(tag.name)) {
+          this.projectTags.push(tag.name);
+        }
+        if (tag.hasTag === false && this.projectTags.includes(tag.name)) {
+          this.projectTags = this.projectTags.filter((x) => x !== tag.name);
+        }
+      });
     },
     onProjectIndustryChange() {
       this.availableSkills.forEach((skill) => {
         if (skill.hasSkill === true) skill.hasSkill = false;
       });
+      this.projectSkills = [];
+
       this.availableTags.forEach((tag) => {
         if (tag.hasTag === true) tag.hasTag = false;
       });
+      this.projectTags = [];
     },
     addPhoto() {
       if (

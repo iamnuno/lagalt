@@ -12,7 +12,7 @@ export default {
   methods: {
     skillUpdate() {
       this.$props.skill.hasSkill = !this.$props.skill.hasSkill;
-      this.$emit("updateUserSkills", this.$props.skill);
+      this.$emit("updateProjectSkills", this.$props.skill);
     },
   },
 };

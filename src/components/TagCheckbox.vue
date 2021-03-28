@@ -12,7 +12,7 @@ export default {
   methods: {
     tagUpdate() {
       this.$props.tag.hasTag = !this.$props.tag.hasTag;
-      this.$emit("updateUserTags", this.$props.tag);
+      this.$emit("updateProjectTags", this.$props.tag);
     },
   },
 };

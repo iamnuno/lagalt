@@ -103,7 +103,7 @@ const TAGS = [
         industry: 'Web development',
     },
     {
-        name: 'RESTFull API',
+        name: 'RESTFul API',
         industry: 'Web development',
     },
     {
