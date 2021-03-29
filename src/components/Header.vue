@@ -6,7 +6,7 @@
     <div class="d-flex flex-column justify-content-center flex-grow-1 ml-4">
       <!-- navbar buttons -->
       <div class="d-flex flex-row">
-        <a class="button text-white">Home</a>
+        <a class="button text-white" @click="toHome()">Home</a>
       </div>
     </div>
     <div class="d-flex flex-column justify-content-center">
@@ -71,6 +71,9 @@ export default {
     },
     toAddProject() {
       this.$router.push("/project/new");
+    },
+    toHome() {
+      this.$router.push({ name: "Home" });
     },
   },
 };

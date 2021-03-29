@@ -7,6 +7,10 @@ import {
     faUserCircle,
     faSearch,
     faFilter,
+    faEdit,
+    faSave,
+    faTimesCircle,
+    faPlusCircle,
     faPlus,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -17,7 +21,16 @@ import Vuelidate from 'vuelidate';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 
-library.add(faUserCircle, faSearch, faFilter, faPlus);
+library.add(
+    faUserCircle,
+    faSearch,
+    faFilter,
+    faEdit,
+    faSave,
+    faTimesCircle,
+    faPlusCircle,
+    faPlus
+);
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 Vue.use(BootstrapVue);

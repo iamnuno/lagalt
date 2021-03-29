@@ -24,7 +24,6 @@ export default {
   props: ["project", "user"],
   computed: {
     projectInitials() {
-      console.log("computed", this.project);
       let initials = "";
 
       const nameArray = this.project.name.split(" ");
@@ -37,12 +36,12 @@ export default {
   methods: {
     // TODO: implement real routing
     toProjectDetails() {
-      alert(`Navigate to project id: ${this.project.id}`);
+      const id = this.project.id;
+      this.$router.push({
+        name: "project",
+        params: { id },
+      });
     },
-  },
-  mounted() {
-    console.log("name", this.project.name);
-    console.log("user skills", this.user.skills);
   },
 };
 </script>
