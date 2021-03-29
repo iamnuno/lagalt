@@ -67,7 +67,7 @@ export default {
       alert("logout");
     },
     toProfile() {
-      alert("profile");
+      this.$router.push("/profile");
     },
     toAddProject() {
       this.$router.push("/project/new");
