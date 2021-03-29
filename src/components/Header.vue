@@ -107,6 +107,7 @@ export default {
 }
 
 .dropdown-container {
+  right: 15px;
   margin-top: 33px;
   font-size: 12px;
   padding: 9px 5px 5px;
