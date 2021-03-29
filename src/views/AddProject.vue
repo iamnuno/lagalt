@@ -295,11 +295,11 @@ export default {
             projectBackgroundPhoto: this.backgroundUrl,
             projectPhotos: this.photos,
           })
-          .then(function (response) {
-            console.log(response);
+          .then((res) => {
+            console.log(res);
             alert("Project created successfully");
           })
-          .catch(function (error) {
+          .catch((error) => {
             console.log(error);
             alert("Project not created");
           });
