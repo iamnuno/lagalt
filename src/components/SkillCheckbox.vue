@@ -1,18 +1,23 @@
 <template>
   <label class="container">
     {{ skill.name }}
-    <input type="checkbox" @change="skillUpdate" />
+    <input
+      type="checkbox"
+      @change="skillUpdate"
+      :checked="skill.hasSkill"
+      :disabled="!edit"
+    />
     <span class="checkmark"></span>
   </label>
 </template>
 
 <script>
 export default {
-  props: ["skill"],
+  props: ["skill", "edit"],
   methods: {
     skillUpdate() {
       this.$props.skill.hasSkill = !this.$props.skill.hasSkill;
-      this.$emit("updateProjectSkills", this.$props.skill);
+      this.$emit("updateSkills", this.$props.skill);
     },
   },
 };
