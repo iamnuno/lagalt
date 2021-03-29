@@ -106,7 +106,8 @@
                 <SkillCheckbox
                   v-if="skill.industry == type"
                   :skill="skill"
-                  @updateProjectSkills="updateProjectSkills"
+                  :edit="true"
+                  @updateSkills="updateSkills"
                 />
               </div>
               <div v-if="!$v.projectSkills.required" class="error">
@@ -307,7 +308,7 @@ export default {
         alert("Please fill the form correctly.");
       }
     },
-    updateProjectSkills(e) {
+    updateSkills(e) {
       this.availableSkills.forEach((skill) => {
         if (skill.name === e.name) skill.hasSkill = e.hasSkill;
       });
