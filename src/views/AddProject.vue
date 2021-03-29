@@ -221,12 +221,20 @@
 </template>
 
 <script>
-import { INDUSTRY, STATUS, SKILLS, TAGS } from "../constants/constants";
+import {
+  INDUSTRY,
+  STATUS,
+  SKILLS,
+  TAGS,
+  API_URL,
+} from "../constants/constants";
 
 import SkillCheckbox from "../components/SkillCheckbox";
 import TagCheckbox from "../components/TagCheckbox";
 
 import { required, url } from "vuelidate/lib/validators";
+
+import axios from "axios";
 
 export default {
   components: { SkillCheckbox, TagCheckbox },
@@ -272,29 +280,29 @@ export default {
       hasTag: false,
     }));
   },
-  computed: {
-    // userSkills() {
-    //   let userSkills = [];
-    //   this.availableSkills.forEach((skill) => {
-    //     if (skill.hasSkill === true) userSkills.push(skill.name);
-    //   });
-    //   return userSkills;
-    // },
-    // projectTags() {
-    //   let projectTags = [];
-    //   this.availableTags.forEach((tag) => {
-    //     if (tag.hasTag === true) projectTags.push(tag.name);
-    //   });
-    //   return projectTags;
-    // },
-  },
   methods: {
     addProject() {
-      // TODO: make HTTP POST request
       if (!this.$v.$invalid) {
-        alert(
-          `Title: ${this.title}\nDescription: ${this.description}\nType: ${this.type}\nStatus: ${this.status}\nTags: ${this.projectTags}\nSkills: ${this.projectSkills}\nExternal URL: ${this.externalUrl}\nBackground URL: ${this.backgroundUrl}\nPhotos: ${this.photos}`
-        );
+        axios
+          .post(API_URL + "/projects", {
+            projectTitle: this.title,
+            projectDescription: this.description,
+            projectProgress: this.status.toUpperCase().replace(" ", "_"),
+            projectType: this.type.toUpperCase().replace(" ", "_"),
+            projectSkills: this.projectSkills,
+            projectTags: this.projectTags,
+            externalUrl: this.externalUrl,
+            projectBackgroundPhoto: this.backgroundUrl,
+            projectPhotos: this.photos,
+          })
+          .then(function (response) {
+            console.log(response);
+            alert("Project created successfully");
+          })
+          .catch(function (error) {
+            console.log(error);
+            alert("Project not created");
+          });
       } else {
         alert("Please fill the form correctly.");
       }

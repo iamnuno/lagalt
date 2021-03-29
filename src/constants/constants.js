@@ -168,4 +168,6 @@ const TAGS = [
     },
 ];
 
-export { INDUSTRY, STATUS, SKILLS, TAGS };
+const API_URL = 'https://lagalt-no.herokuapp.com/api/v1';
+
+export { INDUSTRY, STATUS, SKILLS, TAGS, API_URL };
