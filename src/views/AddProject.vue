@@ -285,7 +285,7 @@ export default {
     addProject() {
       if (!this.$v.$invalid) {
         axios
-          .post(API_URL + "/projects", {
+          .post(API_URL + "/projects/2", {
             projectTitle: this.title,
             projectDescription: this.description,
             projectProgress: this.status.toUpperCase().replace(" ", "_"),
