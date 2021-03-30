@@ -124,9 +124,17 @@
               </div>
               <div class="col-sm-12 mt-3">
                 <p class="m-b-10 f-w-600">Project Applications</p>
-                <h6 v-if="userProjects.length" class="text-muted f-w-400">
-                  {{ userProjects }}
-                </h6>
+                <div v-if="projectApplications.length">
+                  <div
+                    v-for="project in projectApplications"
+                    :key="project.title"
+                    class="text-muted f-w-400 mt-3"
+                  >
+                    <h6>Project Title: {{ project.title }}</h6>
+                    <h6>Application Status: {{ project.status }}</h6>
+                  </div>
+                </div>
+
                 <h6 v-else class="text-muted f-w-400">No applications yet</h6>
               </div>
             </div>
@@ -157,43 +165,71 @@ export default {
       availableSkills: SKILLS,
       userSkills: [],
       userProjects: [],
+      projectApplications: [],
     };
   },
   mounted() {
-    //TODO: implement real user verification
-
-    this.availableSkills = this.availableSkills.map((x) => ({
-      name: x.name,
-      industry: x.industry,
-      hasSkill: false,
-    }));
-
-    axios
-      .get(API_URL + `/users/${this.userId}`, {
-        userDescription: this.description,
-        userPortfolio: this.portfolio,
-        userSkills: this.userSkills,
-        userVisibility: this.visibility,
-      })
-      .then((res) => {
-        this.name = res.data.userName;
-        this.email = res.data.userEmail;
-        this.description = res.data.userDescription;
-        this.visibility = res.data.userVisibility;
-        this.portfolio = res.data.userPortfolio;
-
-        this.userSkills = res.data.userSkills;
-
-        // checkboxes need to be checked for skills user has
-        this.availableSkills.forEach((skill) => {
-          if (this.userSkills.includes(skill.name)) skill.hasSkill = true;
-        });
-
-        this.userProjects = res.data.userProjects;
-      })
-      .catch((error) => console.log(error));
+    this.addHasSkillBoolean();
+    this.getUserInformation();
   },
   methods: {
+    addHasSkillBoolean() {
+      this.availableSkills = this.availableSkills.map((x) => ({
+        name: x.name,
+        industry: x.industry,
+        hasSkill: false,
+      }));
+    },
+    //TODO: implement real user verification
+    getUserInformation() {
+      axios
+        .get(API_URL + `/users/${this.userId}`)
+        .then((res) => {
+          this.name = res.data.userName;
+          this.email = res.data.userEmail;
+          this.description = res.data.userDescription;
+          this.visibility = res.data.userVisibility;
+          this.portfolio = res.data.userPortfolio;
+
+          this.userSkills = res.data.userSkills;
+
+          // checkboxes need to be checked for skills user has
+          this.availableSkills.forEach((skill) => {
+            if (this.userSkills.includes(skill.name)) skill.hasSkill = true;
+          });
+
+          this.userProjects = res.data.userProjects;
+
+          this.updateProjectApplications();
+        })
+        .catch((error) => console.log(error));
+    },
+    // do not show projects where the user is the admin
+    // show project title and application status
+    updateProjectApplications() {
+      this.userProjects.forEach((project) => {
+        let projectId = project.substring(project.lastIndexOf("/") + 1);
+        axios
+          .get(API_URL + `/users-projects/${this.userId}/${projectId}`)
+          .then((res) => {
+            let projectTile = "";
+            let status = res.data.approvalStatus;
+            if (!res.data.admin) {
+              axios
+                .get(API_URL + `/projects/${projectId}`)
+                .then((res) => {
+                  projectTile = res.data.projectTitle;
+                  this.projectApplications.push({
+                    title: projectTile,
+                    status: status,
+                  });
+                })
+                .catch((error) => console.log(error));
+            }
+          })
+          .catch((error) => console.log(error));
+      });
+    },
     editProfile() {
       this.isEditing = !this.isEditing;
     },
@@ -354,17 +390,6 @@ h6 {
 
 .m-t-40 {
   margin-top: 20px;
-}
-
-.user-card-full .social-link li {
-  display: inline-block;
-}
-
-.user-card-full .social-link li a {
-  font-size: 20px;
-  margin: 0 10px 0 0;
-  -webkit-transition: all 0.3s ease-in-out;
-  transition: all 0.3s ease-in-out;
 }
 
 .icon {
