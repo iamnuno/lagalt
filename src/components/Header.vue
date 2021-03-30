@@ -36,6 +36,12 @@
           </div>
           <div
             class="d-block dropdown-item text-dark rounded text-center mb-1"
+            @click="toAddProject"
+          >
+            New project
+          </div>
+          <div
+            class="d-block dropdown-item text-dark rounded text-center mb-1"
             @click="logout"
           >
             Log Out
@@ -61,7 +67,10 @@ export default {
       alert("logout");
     },
     toProfile() {
-      this.$router.push({ name: "Profile" });
+      this.$router.push("/profile");
+    },
+    toAddProject() {
+      this.$router.push("/project/new");
     },
     toHome() {
       this.$router.push({ name: "Home" });
@@ -98,6 +107,7 @@ export default {
 }
 
 .dropdown-container {
+  right: 15px;
   margin-top: 33px;
   font-size: 12px;
   padding: 9px 5px 5px;

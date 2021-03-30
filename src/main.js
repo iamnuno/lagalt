@@ -11,8 +11,11 @@ import {
     faSave,
     faTimesCircle,
     faPlusCircle,
+    faPlus,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+
+import Vuelidate from 'vuelidate';
 
 // Import Bootstrap an BootstrapVue CSS files (order is important)
 import 'bootstrap/dist/css/bootstrap.css';
@@ -44,12 +47,15 @@ library.add(
     faEdit,
     faSave,
     faTimesCircle,
-    faPlusCircle
+    faPlusCircle,
+    faPlus
 );
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 Vue.use(BootstrapVue);
 Vue.config.productionTip = false;
+
+Vue.use(Vuelidate);
 
 new Vue({
     render: (h) => h(App),
