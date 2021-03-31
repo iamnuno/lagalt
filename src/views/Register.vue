@@ -33,8 +33,7 @@
 </template>
 
 <script>
-import firebase from "firebase/app";
-import "firebase/auth";
+import * as firebase from "../utils/firebase";
 
 export default {
   name: "register",
@@ -46,48 +45,8 @@ export default {
     };
   },
   methods: {
-    async register() {
-      firebase
-        .auth()
-        .createUserWithEmailAndPassword(this.username, this.password)
-        .then((userCredential) => {
-          // Signed in
-          var user = userCredential.user;
-          // ...
-          console.log(user);
-
-          try {
-            const user1 = firebase
-              .auth()
-              .createUserWithEmailAndPassword(this.username, this.password);
-            //        this.$router.replace({ name: "Home" });
-            console.log(user1);
-
-            firebase
-              .auth()
-              .currentUser.getIdToken(true)
-              .then(function (idToken) {
-                // Send token to your backend via HTTPS
-                // ...
-                console.log(idToken);
-              })
-              .catch(function (error) {
-                console.log(error);
-
-                // Handle error
-              });
-          } catch (err) {
-            console.log(err);
-          }
-          //authenticate
-        })
-        .catch((error) => {
-          var errorCode = error.code;
-          var errorMessage = error.message;
-          console.log(errorCode + "  " + errorMessage);
-
-          // ..
-        });
+    register() {
+      firebase.register();
     },
   },
   computed: {
