@@ -6,7 +6,8 @@ import UserProfile from '../views/UserProfile';
 import AddProject from '../views/AddProject';
 import Register from '../views/Register';
 import Login from '../views/Login';
-
+import { onAuthStateInit } from '../utils/firebase';
+import { store } from '../utils/store';
 Vue.use(VueRouter);
 
 const routes = [
@@ -18,7 +19,24 @@ const routes = [
     { path: '/login', name: 'login', component: Login },
 ];
 
-export const router = new VueRouter({
+const router = new VueRouter({
     mode: 'history',
     routes,
 });
+
+router.beforeEach(async (to, from, next) => {
+    await onAuthStateInit() // wait for auth system to initialise
+    if (to.name !== 'login' && !store.getters.isAuthorized) {
+        if (to.name === 'register') {
+            next()
+        } else {
+            next({ name: 'login' })
+        }
+    } else if ((to.name === 'login' || to.name === 'register') && store.getters.isAuthorized) {
+        next({ name: 'home' })
+    } else {
+        next()
+    }
+})
+
+export { router };
