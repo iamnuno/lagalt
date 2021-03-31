@@ -6,14 +6,25 @@
     <div class="d-flex flex-column justify-content-center flex-grow-1 ml-4">
       <!-- navbar buttons -->
       <div class="d-flex flex-row">
-        <a class="button text-white" @click="toHome()">Home</a>
+        <router-link class="button text-white" :to="{ name: 'home' }"
+          >Home</router-link
+        >
       </div>
     </div>
     <div class="d-flex flex-column justify-content-center">
-      <div v-if="isLoggedIn">Login</div>
+      <router-link
+        :to="{ name: 'login' }"
+        class="button text-white"
+        v-if="!isLoggedin"
+        >Login</router-link
+      >
 
       <!-- profile -->
-      <div id="profile-container" class="d-flex flex-row profile-container">
+      <div
+        v-if="isLoggedin"
+        id="profile-container"
+        class="d-flex flex-row profile-container"
+      >
         <div class="d-flex flex-column">
           <div
             class="bg-light text-dark my-1 px-2 rounded-pill username shadow"
@@ -53,18 +64,25 @@
 </template>
 
 <script>
+import * as firebase from "../utils/firebase";
+import { mapState } from "vuex";
+
 export default {
   name: "Header",
   data() {
     return {
       title: "Lagalt",
-      isLoggedIn: false,
       username: "Ahmad",
     };
   },
+  computed: mapState(["isLoggedin"]),
   methods: {
-    logout() {
-      alert("logout");
+    async logout() {
+      if (await firebase.logout()) {
+        this.$router.push({ name: "login" });
+      } else {
+        console.log("something went wrong! try again.");
+      }
     },
     toProfile() {
       this.$router.push("/profile");
@@ -89,7 +107,6 @@ export default {
   color: rgb(0, 0, 0) !important;
   text-decoration: none;
 }
-
 .username {
   right: -9px;
   position: relative;
@@ -97,15 +114,12 @@ export default {
 .icon {
   z-index: 1;
 }
-
 .profile-container:hover .dropdown-container {
   display: flex !important;
 }
-
 .dropdown-container .dropdown-item:hover {
   background-color: #ddd;
 }
-
 .dropdown-container {
   right: 15px;
   margin-top: 33px;
@@ -114,9 +128,11 @@ export default {
   min-width: 100px;
   z-index: 1;
 }
-
 .dropdown-item {
   background-color: lightgray;
+  text-decoration: none;
+}
+li {
   text-decoration: none;
 }
 </style>
