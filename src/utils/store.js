@@ -7,7 +7,7 @@ export const store = new Vuex.Store({
     state: {
         user: '',
         jwt: '',
-        isLoggedin: true,
+        isAuthorized: false,
     },
     getters: {
         user: state => {
@@ -16,16 +16,16 @@ export const store = new Vuex.Store({
         jwt: state => {
             return state.jwt;
         },
-        isLoggedin: state => {
-            return state.isLoggedin;
+        isAuthorized: state => {
+            return state.isAuthorized;
         }
     },
     mutations: {
         signout: state => {
-            state.isLoggedin = false;
+            state.isAuthorized = false;
         },
         signin: state => {
-            state.isLoggedin = true;
+            state.isAuthorized = true;
         }
     }
 })

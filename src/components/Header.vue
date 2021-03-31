@@ -15,13 +15,13 @@
       <router-link
         :to="{ name: 'login' }"
         class="button text-white"
-        v-if="!isLoggedin"
+        v-if="!isAuthorized"
         >Login</router-link
       >
 
       <!-- profile -->
       <div
-        v-if="isLoggedin"
+        v-if="isAuthorized"
         id="profile-container"
         class="d-flex flex-row profile-container"
       >
@@ -75,7 +75,7 @@ export default {
       username: "Ahmad",
     };
   },
-  computed: mapState(["isLoggedin"]),
+  computed: mapState(["isAuthorized"]),
   methods: {
     async logout() {
       if (await firebase.logout()) {
