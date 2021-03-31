@@ -52,9 +52,9 @@ export default {
     };
   },
   methods: {
-    login() {
-      if (firebase.login(this.getEmail, this.password)) {
-        this.$router.replace({ name: "home" });
+    async login() {
+      if (await firebase.login(this.getEmail, this.password)) {
+        this.$router.push({ name: "home" });
       } else {
         this.error = true;
       }

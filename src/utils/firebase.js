@@ -14,10 +14,10 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
-function login(username, password) {
+async function login(username, password) {
 
     try {
-        firebase
+        await firebase
             .auth()
             .signInWithEmailAndPassword(username, password)
             .catch((error) => {
@@ -44,9 +44,9 @@ function register() {
         });
 }
 
-function logout() {
+async function logout() {
     try {
-        firebase.auth().signOut();
+        await firebase.auth().signOut();
         return true;
     } catch (error) {
         return false;
