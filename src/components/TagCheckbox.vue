@@ -1,7 +1,7 @@
 <template>
   <label class="container">
     {{ tag.name }}
-    <input type="checkbox" @change="tagUpdate" />
+    <input type="checkbox" @change="tagUpdate" :checked="tag.hasTag" />
     <span class="checkmark"></span>
   </label>
 </template>
