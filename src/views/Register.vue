@@ -12,6 +12,13 @@
         required
       />
       <input
+        v-model="email"
+        class="my-2 mx-5"
+        placeholder="Email"
+        type="email"
+        required
+      />
+      <input
         class="my-2 mx-5"
         v-model="password"
         placeholder="Password"
@@ -33,67 +40,29 @@
 </template>
 
 <script>
-import firebase from "firebase/app";
-import "firebase/auth";
+import * as firebase from "../utils/firebase";
 
 export default {
   name: "register",
   data() {
     return {
       username: "",
+      email: "",
       password: "",
       repeatedPassword: "",
     };
   },
   methods: {
     async register() {
-      firebase
-        .auth()
-        .createUserWithEmailAndPassword(this.username, this.password)
-        .then((userCredential) => {
-          // Signed in
-          var user = userCredential.user;
-          // ...
-          console.log(user);
-
-          try {
-            const user1 = firebase
-              .auth()
-              .createUserWithEmailAndPassword(this.username, this.password);
-            //        this.$router.replace({ name: "Home" });
-            console.log(user1);
-
-            firebase
-              .auth()
-              .currentUser.getIdToken(true)
-              .then(function (idToken) {
-                // Send token to your backend via HTTPS
-                // ...
-                console.log(idToken);
-              })
-              .catch(function (error) {
-                console.log(error);
-
-                // Handle error
-              });
-          } catch (err) {
-            console.log(err);
-          }
-          //authenticate
-        })
-        .catch((error) => {
-          var errorCode = error.code;
-          var errorMessage = error.message;
-          console.log(errorCode + "  " + errorMessage);
-
-          // ..
-        });
+      await firebase.register(this.username, this.email, this.password);
+      this.$router.push({ name: "home" });
     },
   },
   computed: {
     disabled() {
       return (
         this.username.replace(/\s/g, "").length === 0 ||
+        this.email.replace(/\s/g, "").length === 0 ||
         this.password.replace(/\s/g, "").length === 0 ||
         this.repeatedPassword.replace(/\s/g, "").length === 0 ||
         this.repeatedPassword !== this.password

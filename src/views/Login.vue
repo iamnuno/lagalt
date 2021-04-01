@@ -1,82 +1,71 @@
 /<template>
   <div
-    class="flex-grow-1 d-flex flex-column justify-content-center algin-items-center"
+    class="flex-grow-1 d-flex flex-column justify-content-center align-items-center"
   >
-    <div class="shadow d-flex flex-column mx-5 rounded">
+    <div
+      class="shadow d-flex flex-column justify-content-center align-items-center w-50 py-4 rounded"
+    >
       <div class="h2 text-center">Login</div>
-      <input
-        v-model="username"
-        class="my-2 mx-5"
-        placeholder="Username"
-        type="text"
-        required
-      />
-      <input
-        class="my-2 mx-5"
-        v-model="password"
-        placeholder="Password"
-        type="password"
-        required
-      />
-      <button :disabled="disabled" @click="login()" class="my-2 mx-5">
-        Login
-      </button>
-      <div class="text-success text-center pointer" @click="toRegister">
-        dont have an account? register here.
+      <div class="d-flex flex-column overflow-hidden">
+        <input
+          v-model="email"
+          class="my-2 rounded form-control"
+          placeholder="Email"
+          type="text"
+          required
+        />
+        <input
+          class="my-2 rounded form-control"
+          v-model="password"
+          placeholder="Password"
+          type="password"
+          required
+        />
+        <button
+          :disabled="disabled"
+          @click="login()"
+          class="bg-success my-2 btn text-white"
+        >
+          Login
+        </button>
       </div>
+      <div v-if="error" class="text-center text-danger f-w-400">
+        Failed to log in. Check your passowrd and email.
+      </div>
+      <router-link to="register" class="text-info text-center pointer">
+        dont have an account? register here.
+      </router-link>
     </div>
   </div>
 </template>
 
 <script>
-import firebase from "firebase/app";
-import "firebase/auth";
+import * as firebase from "../utils/firebase";
 
 export default {
   name: "Login",
   data() {
     return {
-      username: "",
+      email: "",
       password: "",
+      error: false,
     };
   },
   methods: {
     async login() {
-      try {
-        const user = await firebase
-          .auth()
-          .createUserWithEmailAndPassword(this.username, this.password);
-        //        this.$router.replace({ name: "Home" });
-        console.log(user);
-
-        firebase
-          .auth()
-          .currentUser.getIdToken(true)
-          .then(function (idToken) {
-            // Send token to your backend via HTTPS
-            // ...
-            console.log(idToken);
-          })
-          .catch(function (error) {
-            console.log(error);
-
-            // Handle error
-          });
-      } catch (err) {
-        console.log(err);
-      }
-      //authenticate
-    },
-    toRegister() {
-      this.$router.replace({ name: "register" });
+      if (!(await firebase.login(this.getEmail, this.password)))
+        this.error = true;
     },
   },
   computed: {
     disabled() {
       return (
-        this.username.replace(/\s/g, "").length === 0 ||
+        this.email.replace(/\s/g, "").length === 0 ||
         this.password.replace(/\s/g, "").length === 0
       );
+    },
+    getEmail() {
+      return this.email.replace(/\s/g, "");
     },
   },
 };
