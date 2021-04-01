@@ -25,14 +25,12 @@ const router = new VueRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-    await onAuthStateInit() // wait for auth system to initialise
-    if (to.name !== 'login' && !store.getters.isAuthorized) {
-        if (to.name === 'register') {
-            next()
-        } else {
-            next({ name: 'login' })
-        }
-    } else if ((to.name === 'login' || to.name === 'register') && store.getters.isAuthorized) {
+    await onAuthStateInit()
+    if ((to.name !== 'login' && to.name !== 'register') && !store.getters.isAuthorized) {
+        next({ name: 'login' })
+
+
+    } else if ((to.name === 'login' || to.name === 'register') && await store.getters.isAuthorized) {
         next({ name: 'home' })
     } else {
         next()
