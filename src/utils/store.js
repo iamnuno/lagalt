@@ -5,13 +5,13 @@ Vue.use(Vuex);
 
 export const store = new Vuex.Store({
     state: {
-        user: '',
+        userId: '',
         jwt: '',
         isAuthorized: false,
     },
     getters: {
-        user: state => {
-            return state.user;
+        userId: state => {
+            return state.userId;
         },
         jwt: state => {
             return state.jwt;
@@ -26,6 +26,9 @@ export const store = new Vuex.Store({
         },
         signin: state => {
             state.isAuthorized = true;
+        },
+        setUserId: (state, payload) => {
+            state.userId = payload;
         }
     }
 })

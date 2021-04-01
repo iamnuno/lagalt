@@ -1,19 +1,20 @@
 import firebase from "firebase/app";
 import "firebase/auth";
-import { store } from './store' // import the Vuex store
+import 'firebase/firestore';
+import { store } from './store'
+
 const firebaseConfig = {
-    apiKey: "AIzaSyBzwHI_Dpcsqt8YQLTvUk-MrfIdpUhWWWI",
-    authDomain: "lagalt-147b3.firebaseapp.com",
-    databaseURL: "https://lagalt-147b3-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "lagalt-147b3",
-    storageBucket: "lagalt-147b3.appspot.com",
-    messagingSenderId: "1090780834044",
-    appId: "1:1090780834044:web:4709295c1b1f6ff33f8f79",
-    measurementId: "G-XL3WFBW3W0"
+    apiKey: "AIzaSyBQtLPSvrYafuLKh9QXMr0745iICV3SgsE",
+    authDomain: "lagalt-b4984.firebaseapp.com",
+    projectId: "lagalt-b4984",
+    storageBucket: "lagalt-b4984.appspot.com",
+    messagingSenderId: "593921093939",
+    appId: "1:593921093939:web:ab97fdbe7fab78b5de4e46",
+    measurementId: "G-ETKWWXN5PD"
 }
 
 firebase.initializeApp(firebaseConfig);
-
+let db = firebase.firestore();
 async function login(username, password) {
 
     try {
@@ -33,15 +34,36 @@ async function login(username, password) {
     }
 }
 
-function register() {
-    firebase
-        .auth()
-        .createUserWithEmailAndPassword(this.username, this.password)
-        .catch((error) => {
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            console.log(errorCode + "  " + errorMessage);
-        });
+async function register(username, email, password) {
+    try {
+        await firebase
+            .auth()
+            .createUserWithEmailAndPassword(email, password)
+            .catch((error) => {
+                var errorCode = error.code;
+                var errorMessage = error.message;
+                console.log(errorCode + "  " + errorMessage);
+                throw "error"
+            });
+
+        let id = 2;// await newUser(username, email);
+
+        firebase.auth().onAuthStateChanged((user) => {
+            db.collection("users").doc(user.uid).set({
+                id: id,
+            })
+                .then(() => {
+                    console.log("Document successfully written!");
+                })
+                .catch((error) => {
+                    console.error("Error writing document: ", error);
+                });
+
+        })
+        return true;
+    } catch (error) {
+        return false;
+    }
 }
 
 async function logout() {
@@ -65,10 +87,24 @@ function getJwt() {
             return null;
         });
 }
-const onAuthStateChangedPromise = new Promise((resolve, reject) => {
-    firebase.auth().onAuthStateChanged(user => {
-        store.commit(user !== null ? 'signin' : 'signout');
-        resolve(user)
+
+// eslint-disable-next-line no-async-promise-executor
+const onAuthStateChangedPromise = new Promise(async (resolve, reject) => {
+    let userId = null;
+
+    await firebase.auth().onAuthStateChanged(async user => {
+        if (user !== null) {
+            userId = user.uid;
+            await db.collection("users").doc(userId).get().then((doc) => {
+                userId = doc.data().id;
+            });
+            store.commit('signin');
+            store.commit('setUserId', userId);
+        } else {
+            store.commit('signout');
+            store.commit('setUserId', userId);
+        }
+        resolve(userId)
     }, err => {
         reject(err)
     })
