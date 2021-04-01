@@ -12,6 +12,13 @@
         required
       />
       <input
+        v-model="email"
+        class="my-2 mx-5"
+        placeholder="Email"
+        type="email"
+        required
+      />
+      <input
         class="my-2 mx-5"
         v-model="password"
         placeholder="Password"
@@ -40,19 +47,22 @@ export default {
   data() {
     return {
       username: "",
+      email: "",
       password: "",
       repeatedPassword: "",
     };
   },
   methods: {
-    register() {
-      firebase.register();
+    async register() {
+      await firebase.register(this.username, this.email, this.password);
+      this.$router.push({ name: "home" });
     },
   },
   computed: {
     disabled() {
       return (
         this.username.replace(/\s/g, "").length === 0 ||
+        this.email.replace(/\s/g, "").length === 0 ||
         this.password.replace(/\s/g, "").length === 0 ||
         this.repeatedPassword.replace(/\s/g, "").length === 0 ||
         this.repeatedPassword !== this.password

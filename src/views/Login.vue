@@ -8,9 +8,9 @@
       <div class="h2 text-center">Login</div>
       <div class="d-flex flex-column overflow-hidden">
         <input
-          v-model="username"
+          v-model="email"
           class="my-2 rounded form-control"
-          placeholder="Username"
+          placeholder="Email"
           type="text"
           required
         />
@@ -30,7 +30,7 @@
         </button>
       </div>
       <div v-if="error" class="text-center text-danger f-w-400">
-        Failed to log in. Check your passowrd and username.
+        Failed to log in. Check your passowrd and email.
       </div>
       <router-link to="register" class="text-info text-center pointer">
         dont have an account? register here.
@@ -46,29 +46,26 @@ export default {
   name: "Login",
   data() {
     return {
-      username: "",
+      email: "",
       password: "",
       error: false,
     };
   },
   methods: {
     async login() {
-      if (await firebase.login(this.getEmail, this.password)) {
-        this.$router.push({ name: "home" });
-      } else {
+      if (!(await firebase.login(this.getEmail, this.password)))
         this.error = true;
-      }
     },
   },
   computed: {
     disabled() {
       return (
-        this.username.replace(/\s/g, "").length === 0 ||
+        this.email.replace(/\s/g, "").length === 0 ||
         this.password.replace(/\s/g, "").length === 0
       );
     },
     getEmail() {
-      return this.username.replace(/\s/g, "");
+      return this.email.replace(/\s/g, "");
     },
   },
 };
