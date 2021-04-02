@@ -411,9 +411,11 @@
                     <tbody>
                       <tr
                         v-for="application in applications"
-                        :key="application.userId"
+                        :key="application.id.userId"
                       >
-                        <td>{{ application.name }}</td>
+                        <td>
+                          {{ application.name }}
+                        </td>
                         <td>
                           {{ application.motivation }}
                         </td>
@@ -428,15 +430,21 @@
                           </div>
                           <div v-else>No skills...</div>
                         </td>
-                        <td>{{ application.status }}</td>
-                        <td @click="approve">Approve</td>
-                        <td @click="reject">Reject</td>
+                        <td>
+                          {{ application.status }}
+                        </td>
+                        <td @click="approveApplication(application.id)">
+                          Approve
+                        </td>
+                        <td @click="rejectApplication(application.id)">
+                          Reject
+                        </td>
                       </tr>
                     </tbody>
                   </table>
                 </div>
               </div>
-              <div v-else>No applications needing approval</div>
+              <div v-else>No applications</div>
             </div>
           </div>
         </div>
@@ -665,6 +673,21 @@ export default {
                   })
                   .catch((error) => console.log(error));
               }
+
+              // update access to project
+              this.applications.forEach((application) => {
+                axios
+                  .put(
+                    API_URL +
+                      `/users-projects/${application.id.userId}/${application.id.projectId}`,
+                    {
+                      approvalStatus: application.status,
+                      motivation: application.motivation,
+                    }
+                  )
+                  .then((res) => console.log(res))
+                  .catch((error) => console.log(error));
+              });
             });
             alert("Project updated successfully");
           })
@@ -676,11 +699,25 @@ export default {
         alert("Please fill in data correctly!");
       }
     },
-    approve() {
-      alert("approve");
+    approveApplication(applicationId) {
+      this.applications.forEach((application) => {
+        if (
+          application.id.projectId === applicationId.projectId &&
+          application.id.userId === applicationId.userId
+        ) {
+          application.status = "APPROVED";
+        }
+      });
     },
-    reject() {
-      alert("reject");
+    rejectApplication(applicationId) {
+      this.applications.forEach((application) => {
+        if (
+          application.id.projectId === applicationId.projectId &&
+          application.id.userId === applicationId.userId
+        ) {
+          application.status = "REJECTED";
+        }
+      });
     },
     getProjectDetails() {
       axios
@@ -750,24 +787,22 @@ export default {
             let skills = [];
             let name = "";
 
-            if (status === "PENDING") {
-              motivation = res.data.motivation;
-              axios
-                .get(API_URL + `/users/${userId}`)
-                .then((res) => {
-                  skills = res.data.userSkills;
-                  name = res.data.userName;
+            motivation = res.data.motivation;
+            axios
+              .get(API_URL + `/users/${userId}`)
+              .then((res) => {
+                skills = res.data.userSkills;
+                name = res.data.userName;
 
-                  this.applications.push({
-                    userId: userId,
-                    name: name,
-                    status: status,
-                    motivation: motivation,
-                    skills: skills,
-                  });
-                })
-                .catch((error) => console.log(error));
-            }
+                this.applications.push({
+                  id: { userId, projectId: this.projectId },
+                  name: name,
+                  status: status,
+                  motivation: motivation,
+                  skills: skills,
+                });
+              })
+              .catch((error) => console.log(error));
           })
           .catch((error) => console.log(error));
       });
