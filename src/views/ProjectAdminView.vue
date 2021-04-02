@@ -215,18 +215,122 @@
         </div>
         <div class="row p-3">
           <!-- Announcements -->
-          <div class="col-md-6 d-flex">
+          <div class="col-md-12">
             <div class="form-group">
               <label class="form-label">Announcements</label><br />
               <div v-if="announcements.length">
-                <div
-                  v-for="announcement in announcements"
-                  :key="announcement.id"
-                >
-                  <ProjectCard :data="announcement" />
+                <div class="table-responsive">
+                  <table class="table table-borderless">
+                    <thead>
+                      <tr>
+                        <th scope="col" class="text-muted">Title</th>
+                        <th scope="col" class="text-muted">Text</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        v-for="announcement in $v.announcements.$each.$iter"
+                        :key="announcement.id.$model"
+                      >
+                        <td>
+                          <input
+                            class="form-field-no-border"
+                            type="text"
+                            @input="
+                              updateAnnouncementUpdatedAt(
+                                announcement.id.$model
+                              )
+                            "
+                            v-model.trim="announcement.title.$model"
+                          />
+                          <div
+                            class="error"
+                            v-if="!announcement.title.required"
+                          >
+                            Title is required
+                          </div>
+                        </td>
+                        <td>
+                          <input
+                            class="form-field-no-border"
+                            type="text"
+                            @input="
+                              updateAnnouncementUpdatedAt(
+                                announcement.id.$model
+                              )
+                            "
+                            v-model.trim="announcement.text.$model"
+                          />
+                          <div class="error" v-if="!announcement.text.required">
+                            Text is required
+                          </div>
+                        </td>
+                        <td>
+                          <div v-if="!announcement.isDelete.$model">
+                            <span
+                              @click="
+                                deleteAnnouncement(announcement.id.$model)
+                              "
+                              >Delete</span
+                            >
+                          </div>
+                          <div v-else><i>Set for deletion...</i></div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
               </div>
               <div v-else>No announcements yet</div>
+            </div>
+          </div>
+        </div>
+        <!-- New Announcement -->
+        <div class="row p-3">
+          <div class="col-md-12">
+            <label class="form-label">New Announcement</label>
+          </div>
+          <div class="col-md-6">
+            <div
+              class="form-group"
+              :class="{ 'form-group--error': newAnnouncement.titleError }"
+            >
+              <label class="form-label">Title</label>
+              <input
+                class="form-field"
+                type="text"
+                placeholder="Title..."
+                v-model.trim="newAnnouncement.title"
+              />
+            </div>
+            <div v-if="newAnnouncement.titleError" class="error">
+              Field required
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div
+              class="form-group"
+              :class="{ 'form-group--error': newAnnouncement.textError }"
+            >
+              <label class="form-label">Text</label>
+              <div class="add-announcement">
+                <input
+                  class="form-field"
+                  type="text"
+                  placeholder="Text..."
+                  v-model.trim="newAnnouncement.text"
+                />
+                <font-awesome-icon
+                  :icon="['fas', 'plus']"
+                  size="1x"
+                  @click="addAnnouncement"
+                  class="add-button"
+                />
+              </div>
+
+              <div v-if="newAnnouncement.textError" class="error">
+                Field required
+              </div>
             </div>
           </div>
         </div>
@@ -356,10 +460,9 @@ import {
 } from "../constants/constants";
 import SkillCheckbox from "../components/SkillCheckbox";
 import TagCheckbox from "../components/TagCheckbox";
-import ProjectCard from "../components/ProjectCard";
 
 export default {
-  components: { SkillCheckbox, TagCheckbox, ProjectCard },
+  components: { SkillCheckbox, TagCheckbox },
   data() {
     return {
       projectId: this.$route.params.id,
@@ -381,6 +484,12 @@ export default {
       newPhotoUrl: "",
       messages: [],
       applications: [],
+      newAnnouncement: {
+        title: "",
+        text: "",
+        titleError: false,
+        textError: false,
+      },
     };
   },
   validations: {
@@ -392,6 +501,14 @@ export default {
     projectSkills: { required },
     projectTags: { required },
     messages: {
+      $each: {
+        id: {},
+        isDelete: {},
+        title: { required },
+        text: { required },
+      },
+    },
+    announcements: {
       $each: {
         id: {},
         isDelete: {},
@@ -416,6 +533,44 @@ export default {
     }));
   },
   methods: {
+    addAnnouncement() {
+      if (this.newAnnouncement.title === "") {
+        this.newAnnouncement.titleError = true;
+      } else {
+        this.newAnnouncement.titleError = false;
+      }
+      if (this.newAnnouncement.text === "") {
+        this.newAnnouncement.textError = true;
+      } else {
+        this.newAnnouncement.textError = false;
+      }
+
+      if (!this.newAnnouncement.titleError && !this.newAnnouncement.textError) {
+        this.announcements.push({
+          title: this.newAnnouncement.title,
+          text: this.newAnnouncement.text,
+          isCreate: true,
+        });
+      }
+    },
+    // on input change update updatedAt
+    updateAnnouncementUpdatedAt(announcementId) {
+      this.announcements.forEach((announcement) => {
+        if (announcement.id === announcementId) {
+          announcement.updatedAt = new Date().getTime();
+        }
+      });
+    },
+    // set an announcement to be deleted on update
+    deleteAnnouncement(announcementId) {
+      this.announcements.forEach((announcement) => {
+        if (announcement.id === announcementId) {
+          announcement.isDelete = true;
+        } else {
+          announcement.isDelete = false;
+        }
+      });
+    },
     // on input change update updatedAt
     updateMessageUpdatedAt(messageId) {
       this.messages.forEach((msg) => {
@@ -450,6 +605,7 @@ export default {
           })
           .then((res) => {
             console.log(res);
+            // update / delete messages
             this.messages.forEach((message) => {
               if (message.isDelete === true) {
                 axios.delete(API_URL + `/project-cards/${message.id}`);
@@ -464,6 +620,45 @@ export default {
                     projectCardText: message.text,
                     projectCardCreatedAt: message.createdAt,
                     projectCardUpdatedAt: message.updatedAt,
+                  })
+                  .then((res) => {
+                    console.log(res);
+                  })
+                  .catch((error) => console.log(error));
+              }
+            });
+
+            // update delete create announcement
+            this.announcements.forEach((announcement) => {
+              // delete announcement
+              if (announcement.isDelete === true) {
+                axios.delete(API_URL + `/announcements/${announcement.id}`);
+                // do not show the announcement anymore
+                this.announcements = this.announcements.filter(
+                  (a) => a.id !== announcement.id
+                );
+              } else if (announcement.isCreate == true) {
+                // add new announcement
+                axios
+                  .post(API_URL + `/announcements`, {
+                    announcementTitle: announcement.title,
+                    announcementText: announcement.text,
+                    announcementCreatedAt: new Date().getTime(),
+                    announcementUpdatedAt: new Date().getTime(),
+                    project: { projectId: this.projectId },
+                  })
+                  .then((res) => {
+                    console.log(res);
+                  })
+                  .catch((error) => console.log(error));
+              } else {
+                // update announcement
+                axios
+                  .put(API_URL + `/announcements/${announcement.id}`, {
+                    announcementTitle: announcement.title,
+                    announcementText: announcement.text,
+                    announcementCreatedAt: announcement.createdAt,
+                    announcementUpdatedAt: announcement.updatedAt,
                   })
                   .then((res) => {
                     console.log(res);
@@ -537,6 +732,7 @@ export default {
               createdAt,
               updatedAt,
               isDelete: false,
+              isCreate: false,
             });
           })
           .catch((error) => console.log(error));
@@ -585,7 +781,16 @@ export default {
             let id = res.data.announcementId;
             let title = res.data.announcementTitle;
             let text = res.data.announcementText;
-            this.announcements.push({ id: id, title: title, text: text });
+            let createdAt = res.data.announcementCreatedAt;
+            let updatedAt = res.data.announementUpdatedAt;
+            this.announcements.push({
+              id,
+              title,
+              text,
+              createdAt,
+              updatedAt,
+              isDelete: false,
+            });
           })
           .catch((error) => console.log(error));
       });
@@ -870,7 +1075,7 @@ form {
   color: red;
 }
 
-ProjectCard {
-  cursor: pointer;
+.add-announcement {
+  display: flex;
 }
 </style>
