@@ -130,8 +130,31 @@
                     :key="project.title"
                     class="text-muted f-w-400 mt-3"
                   >
-                    <h6>Project Title: {{ project.title }}</h6>
-                    <h6>Application Status: {{ project.status }}</h6>
+                    <div v-if="!project.isAdmin">
+                      <h6>Project Title: {{ project.title }}</h6>
+                      <h6>Application Status: {{ project.status }}</h6>
+                    </div>
+                  </div>
+                </div>
+
+                <h6 v-else class="text-muted f-w-400">No applications yet</h6>
+              </div>
+              <div class="col-sm-12 mt-3">
+                <p class="m-b-10 f-w-600">Admin</p>
+                <div v-if="projectApplications.length">
+                  <div
+                    v-for="project in projectApplications"
+                    :key="project.title"
+                    class="text-muted f-w-400 mt-3"
+                  >
+                    <div v-if="project.isAdmin">
+                      <h6
+                        @click="navigateToAdminPage(project.id.projectId)"
+                        class="show-pointer"
+                      >
+                        Project Title: {{ project.title }}
+                      </h6>
+                    </div>
                   </div>
                 </div>
 
@@ -156,7 +179,7 @@ export default {
   data() {
     return {
       isEditing: false,
-      userId: 3,
+      userId: 2,
       name: "",
       description: "",
       portfolio: "",
@@ -173,6 +196,9 @@ export default {
     this.getUserInformation();
   },
   methods: {
+    navigateToAdminPage(projectId) {
+      this.$router.push({ path: `/project/${projectId}/admin` });
+    },
     addHasSkillBoolean() {
       this.availableSkills = this.availableSkills.map((x) => ({
         name: x.name,
@@ -204,7 +230,6 @@ export default {
         })
         .catch((error) => console.log(error));
     },
-    // do not show projects where the user is the admin
     // show project title and application status
     updateProjectApplications() {
       this.userProjects.forEach((project) => {
@@ -214,18 +239,20 @@ export default {
           .then((res) => {
             let projectTile = "";
             let status = res.data.approvalStatus;
-            if (!res.data.admin) {
-              axios
-                .get(API_URL + `/projects/${projectId}`)
-                .then((res) => {
-                  projectTile = res.data.projectTitle;
-                  this.projectApplications.push({
-                    title: projectTile,
-                    status: status,
-                  });
-                })
-                .catch((error) => console.log(error));
-            }
+            let isAdmin = res.data.admin;
+            let id = res.data.id;
+            axios
+              .get(API_URL + `/projects/${projectId}`)
+              .then((res) => {
+                projectTile = res.data.projectTitle;
+                this.projectApplications.push({
+                  title: projectTile,
+                  status: status,
+                  isAdmin,
+                  id,
+                });
+              })
+              .catch((error) => console.log(error));
           })
           .catch((error) => console.log(error));
       });
@@ -435,5 +462,9 @@ textarea.textarea_edit {
 
 textarea:focus {
   outline: none;
+}
+
+.show-pointer:hover {
+  cursor: pointer;
 }
 </style>
