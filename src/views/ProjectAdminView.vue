@@ -214,6 +214,7 @@
           </div>
         </div>
         <div class="row p-3">
+          <!-- Announcements -->
           <div class="col-md-6 d-flex">
             <div class="form-group">
               <label class="form-label">Announcements</label><br />
@@ -231,10 +232,10 @@
         </div>
         <div class="row p-3">
           <div class="col-md-12">
+            <!-- Messages -->
             <div class="form-group">
               <label class="form-label">Messages</label><br />
               <div v-if="messages.length">
-                <!-- <ProjectCard :data="message" /> -->
                 <div class="table-responsive">
                   <table class="table table-borderless">
                     <thead>
@@ -246,23 +247,38 @@
                     <tbody>
                       <tr
                         v-for="message in $v.messages.$each.$iter"
-                        :key="message.id"
+                        :key="message.id.$model"
                       >
                         <td>
                           <input
                             class="form-field-no-border"
                             type="text"
+                            @input="updateMessageUpdatedAt(message.id.$model)"
                             v-model.trim="message.title.$model"
                           />
+                          <div class="error" v-if="!message.title.required">
+                            Title is required
+                          </div>
                         </td>
                         <td>
                           <input
                             class="form-field-no-border"
                             type="text"
+                            @input="updateMessageUpdatedAt(message.id.$model)"
                             v-model.trim="message.text.$model"
                           />
+                          <div class="error" v-if="!message.text.required">
+                            Text is required
+                          </div>
                         </td>
-                        <td @click="deleteMessage">Delete</td>
+                        <td>
+                          <div v-if="!message.isDelete.$model">
+                            <span @click="deleteMessage(message.id.$model)"
+                              >Delete</span
+                            >
+                          </div>
+                          <div v-else><i>Set for deletion...</i></div>
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -274,6 +290,7 @@
         </div>
         <div class="row p-3">
           <div class="col-md-12">
+            <!-- Project applications -->
             <div class="form-group">
               <label class="form-label">Project Applications</label><br />
               <div v-if="applications.length">
@@ -340,7 +357,6 @@ import {
 import SkillCheckbox from "../components/SkillCheckbox";
 import TagCheckbox from "../components/TagCheckbox";
 import ProjectCard from "../components/ProjectCard";
-// import CardModal from "../components/CardModal";
 
 export default {
   components: { SkillCheckbox, TagCheckbox, ProjectCard },
@@ -376,8 +392,9 @@ export default {
     projectSkills: { required },
     projectTags: { required },
     messages: {
-      required,
       $each: {
+        id: {},
+        isDelete: {},
         title: { required },
         text: { required },
       },
@@ -399,9 +416,23 @@ export default {
     }));
   },
   methods: {
-    deleteMessage() {},
-    markedForDeletion(announcement) {
-      console.log(announcement);
+    // on input change update updatedAt
+    updateMessageUpdatedAt(messageId) {
+      this.messages.forEach((msg) => {
+        if (msg.id === messageId) {
+          msg.updatedAt = new Date().getTime();
+        }
+      });
+    },
+    // set a message to be deleted on update
+    deleteMessage(messageId) {
+      this.messages.forEach((msg) => {
+        if (msg.id === messageId) {
+          msg.isDelete = true;
+        } else {
+          msg.isDelete = false;
+        }
+      });
     },
     updateProject() {
       if (!this.$v.$invalid) {
@@ -420,18 +451,27 @@ export default {
           .then((res) => {
             console.log(res);
             this.messages.forEach((message) => {
-              axios
-                .put(API_URL + `/project-cards/${message.id}`, {
-                  projectCardTitle: message.title,
-                  projectCardText: message.text,
-                  projectCardUpdatedAt: new Date().getTime(),
-                })
-                .then((res) => {
-                  console.log(res);
-                  alert("Project updated successfully");
-                })
-                .catch((error) => console.log(error));
+              if (message.isDelete === true) {
+                axios.delete(API_URL + `/project-cards/${message.id}`);
+                // do not show the message anymore
+                this.messages = this.messages.filter(
+                  (msg) => msg.id !== message.id
+                );
+              } else {
+                axios
+                  .put(API_URL + `/project-cards/${message.id}`, {
+                    projectCardTitle: message.title,
+                    projectCardText: message.text,
+                    projectCardCreatedAt: message.createdAt,
+                    projectCardUpdatedAt: message.updatedAt,
+                  })
+                  .then((res) => {
+                    console.log(res);
+                  })
+                  .catch((error) => console.log(error));
+              }
             });
+            alert("Project updated successfully");
           })
           .catch((error) => {
             console.log(error);
@@ -496,6 +536,7 @@ export default {
               text,
               createdAt,
               updatedAt,
+              isDelete: false,
             });
           })
           .catch((error) => console.log(error));
