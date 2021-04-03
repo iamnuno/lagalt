@@ -2,6 +2,7 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import 'firebase/firestore';
 import { store } from './store'
+import { newUser } from './apiService';
 
 const firebaseConfig = {
     apiKey: "AIzaSyBQtLPSvrYafuLKh9QXMr0745iICV3SgsE",
@@ -46,7 +47,7 @@ async function register(username, email, password) {
                 throw "error"
             });
 
-        let id = 2;// await newUser(username, email);
+        let id = await newUser(username, email);
 
         firebase.auth().onAuthStateChanged((user) => {
             db.collection("users").doc(user.uid).set({
