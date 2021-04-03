@@ -1,12 +1,13 @@
 <template>
   <div class="flex-grow-1 d-flex flex-column m-5 p-4 rounded shadow">
-    <div class="d-flex justify-content-start flex-row">
-      <h4 class="flex-grow-1">Available Projects</h4>
+    <div class="d-flex flex-row flex-wrap">
+      <h4 class="flex-grow-1 text-nowrap">Available availableProjects</h4>
+      <div class="break" />
       <!-- filter -->
       <div class="rounded box d-flex flex-row mr-2">
         <div
           id="industry-list"
-          class="bg-light rounded px-lg-2 mx-2 my-1 filter-button d-flex flex-row-reverse"
+          class="bg-light rounded px-lg-2 mx-2 my-1 filter-button d-flex flex-lg-row-reverse flex-nowrap"
         >
           <div class="px-2 pointer rounded industry-button">Industry</div>
 
@@ -105,11 +106,11 @@
       <div class="mr-5">Skills</div>
       <div class="mx-5">Industry</div>
     </div>
-    <!-- projects' list goes here -->
-    <div v-if="projects.length && user">
+    <!-- availableProjects' list goes here -->
+    <div>
       <ProjectBanner
-        v-for="project in projects"
-        :key="project.id"
+        v-for="project in availableProjects"
+        :key="project.projectId"
         :project="project"
         :user="user"
       />
@@ -119,31 +120,30 @@
 
 <script>
 import ProjectBanner from "../components/ProjectBanner";
+import {
+  getAvailableProjects,
+  getUserProjects,
+  getUser,
+} from "../utils/apiService";
+
 export default {
   name: "Home",
   components: { ProjectBanner },
   data() {
     return {
-      projects: [],
-      user: null,
+      userProjects: [],
+      availableProjects: [],
+      user: "nulla",
       search: null,
     };
   },
-  mounted() {
-    // TODO use real API calls
-    // fetch projects
-    fetch("http://localhost:3000/projects")
-      .then((res) => res.json())
-      .then((data) => (this.projects = data))
-      .catch((err) => console.log(err));
+  async mounted() {
+    this.availableProjects = await getAvailableProjects();
+    this.userProjects = await getUserProjects();
+    this.user = await getUser();
 
-    // fetch user
-    fetch("http://localhost:3000/user")
-      .then((res) => res.json())
-      .then((data) => (this.user = data))
-      .catch((err) => console.log(err));
-
-    console.log(this.projects);
+    console.log(this.availableProjects);
+    console.log(this.user);
   },
   methods: {
     filterByIndustry: function (event) {
