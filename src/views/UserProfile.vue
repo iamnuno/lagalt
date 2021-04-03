@@ -149,7 +149,7 @@
 import axios from "axios";
 
 import SkillCheckbox from "../components/SkillCheckbox";
-import { SKILLS, API_URL } from "../constants/constants";
+import { SKILLS, BASE_API_URL, API_URL } from "../constants/constants";
 
 export default {
   components: { SkillCheckbox },
@@ -183,7 +183,7 @@ export default {
     //TODO: implement real user verification
     getUserInformation() {
       axios
-        .get(API_URL + `/users/${this.userId}`)
+        .get(BASE_API_URL + API_URL + `/users/${this.userId}`)
         .then((res) => {
           this.name = res.data.userName;
           this.email = res.data.userEmail;
@@ -210,13 +210,17 @@ export default {
       this.userProjects.forEach((project) => {
         let projectId = project.substring(project.lastIndexOf("/") + 1);
         axios
-          .get(API_URL + `/users-projects/${this.userId}/${projectId}`)
+          .get(
+            BASE_API_URL +
+              API_URL +
+              `/users-projects/${this.userId}/${projectId}`
+          )
           .then((res) => {
             let projectTile = "";
             let status = res.data.approvalStatus;
             if (!res.data.admin) {
               axios
-                .get(API_URL + `/projects/${projectId}`)
+                .get(BASE_API_URL + API_URL + `/projects/${projectId}`)
                 .then((res) => {
                   projectTile = res.data.projectTitle;
                   this.projectApplications.push({
