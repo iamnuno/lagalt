@@ -14,7 +14,7 @@
           >{{ skill }}</span
         >
       </div>
-      <div class="type">{{ project.projectType }}</div>
+      <div class="type text-capitalize">{{ industry }}</div>
     </div>
   </div>
 </template>
@@ -35,6 +35,9 @@ export default {
       initials += nameArray[nameArray.length - 1][0];
 
       return initials.toUpperCase();
+    },
+    industry() {
+      return this.project.projectType.replaceAll("_", " ").toLowerCase();
     },
   },
   methods: {
