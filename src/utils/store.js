@@ -8,6 +8,7 @@ export const store = new Vuex.Store({
         userId: '',
         isAuthorized: false,
         user: "unknown",
+        jwt: null,
     },
     getters: {
         userId: state => {
@@ -18,6 +19,9 @@ export const store = new Vuex.Store({
         },
         user: state => {
             return state.user;
+        },
+        jwt: state => {
+            return state.jwt;
         }
     },
     mutations: {
@@ -32,6 +36,9 @@ export const store = new Vuex.Store({
         },
         setUser: (state, payload) => {
             state.user = payload;
+        },
+        updateJWT: (state, payload) => {
+            state.jwt = payload;
         }
     },
 
