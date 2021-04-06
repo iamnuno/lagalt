@@ -22,10 +22,7 @@
 <script>
 export default {
   props: ["project", "user"],
-  created: () => {
-    console.log(this.project);
-    console.log(this.user);
-  },
+
   computed: {
     projectInitials() {
       let initials = "";

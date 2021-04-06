@@ -15,6 +15,7 @@ const firebaseConfig = {
 }
 
 firebase.initializeApp(firebaseConfig);
+
 let db = firebase.firestore();
 async function login(username, password) {
 
@@ -50,16 +51,17 @@ async function register(username, email, password) {
         let id = await newUser(username, email);
 
         firebase.auth().onAuthStateChanged((user) => {
-            db.collection("users").doc(user.uid).set({
-                id: id,
-            })
-                .then(() => {
-                    console.log("Document successfully written!");
+            if (user) {
+                db.collection("users").doc(user.uid).set({
+                    id: id,
                 })
-                .catch((error) => {
-                    console.error("Error writing document: ", error);
-                });
-
+                    .then(() => {
+                        console.log("Document successfully written!");
+                    })
+                    .catch((error) => {
+                        console.error("Error writing document: ", error);
+                    });
+            }
         })
         return true;
     } catch (error) {
@@ -76,15 +78,15 @@ async function logout() {
     }
 }
 
-function getJwt() {
-    firebase
-        .auth()
+async function getJwt() {
+    return firebase.auth()
         .currentUser.getIdToken(true)
         .then(function (idToken) {
             return idToken;
         })
         .catch(function (error) {
             console.error(error);
+            console.error("user is not logged in yet!");
             return null;
         });
 }

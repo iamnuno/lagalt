@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <Header />
-    <div class="flex-grow-1">
+    <div class="flex-grow-1 d-flex flex-column">
       <router-view />
     </div>
     <Footer />

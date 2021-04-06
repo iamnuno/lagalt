@@ -107,7 +107,7 @@
       <div class="mx-5">Industry</div>
     </div>
     <!-- availableProjects' list goes here -->
-    <div>
+    <div v-if="availableProjects.length != 0 && user != null">
       <ProjectBanner
         v-for="project in availableProjects"
         :key="project.projectId"
@@ -133,7 +133,7 @@ export default {
     return {
       userProjects: [],
       availableProjects: [],
-      user: "nulla",
+      user: null,
       search: null,
     };
   },
@@ -141,9 +141,6 @@ export default {
     this.availableProjects = await getAvailableProjects();
     this.userProjects = await getUserProjects();
     this.user = await getUser();
-
-    console.log(this.availableProjects);
-    console.log(this.user);
   },
   methods: {
     filterByIndustry: function (event) {
