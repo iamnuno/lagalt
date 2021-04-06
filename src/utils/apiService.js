@@ -47,7 +47,7 @@ async function getUser() {
 }
 
 async function getProjectById(id) {
-    return axios.get(BASE_API_URL + API_URL + '/projects/' + id), config
+    return axios.get(BASE_API_URL + API_URL + '/projects/' + id, config)
         .then((response) => { return response.data })
         .catch((err) => alert(err));
 }
