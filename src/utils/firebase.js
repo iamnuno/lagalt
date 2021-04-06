@@ -103,6 +103,7 @@ const onAuthStateChangedPromise = new Promise(async (resolve, reject) => {
             });
             store.commit('signin');
             store.commit('setUserId', userId);
+            store.commit('updateJWT', await getJwt());
             store.commit("setUser", await getUser())
         } else {
             store.commit('signout');

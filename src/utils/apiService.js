@@ -1,14 +1,12 @@
 import axios from 'axios';
 import { BASE_API_URL, API_URL } from '../constants/constants';
 import { store } from './store';
-import * as firebase from './firebase';
 
-const config = async function() {
-    return {
-        headers: {
-            Authorization: 'Bearer ' + (await firebase.getJwt()),
-        },
-    };
+
+const config = {
+    headers: {
+        Authorization: 'Bearer  ' + store.getters.jwt,
+    }
 };
 
 async function newUser(username, email) {
@@ -26,7 +24,7 @@ async function newUser(username, email) {
         .then((response) => {
             res = response.data.userId;
         })
-        .catch(function(error) {
+        .catch(function (error) {
             console.log(error);
         });
     return res;
@@ -50,7 +48,7 @@ async function updateUser(user) {
         .then((response) => {
             res = response.data.userId;
         })
-        .catch(function(error) {
+        .catch(function (error) {
             console.log(error);
         });
     return res;
@@ -78,15 +76,22 @@ async function newProject(project) {
         .then((response) => {
             res = response.data;
         })
-        .catch(function(error) {
+        .catch(function (error) {
             console.log(error);
         });
     return res;
 }
 
-async function getAvailableProjects() {
+async function getAvailableProjects(industry = "", search = "", status = "") {
+    console.log(config)
+    let query = "";
+
+    if (industry != "" || search != "" || status != "") {
+        query = "?" + (industry == "" ? "" : "industry=" + industry) + (status == "" ? "" : "status=" + status) + (search == "" ? "" : "search=" + search)
+    }
+
     return axios
-        .get(BASE_API_URL + API_URL + '/projects')
+        .get(BASE_API_URL + API_URL + '/projects' + query, config)
         .then((response) => {
             return response.data;
         })
