@@ -56,6 +56,34 @@ async function updateUser(user) {
     return res;
 }
 
+async function newProject(project) {
+    let res;
+    await axios
+        .post(
+            BASE_API_URL + API_URL + '/projects',
+            {
+                userId: project.userId,
+                projectTitle: project.projectTitle,
+                projectDescription: project.projectDescription,
+                projectProgress: project.projectProgress,
+                projectType: project.projectType,
+                projectSkills: project.projectSkills,
+                projectTags: project.projectTags,
+                externalUrl: project.externalUrl,
+                projectBackgroundPhoto: project.BackgroundPhoto,
+                projectPhotos: project.projectPhotos,
+            },
+            config
+        )
+        .then((response) => {
+            res = response.data;
+        })
+        .catch(function(error) {
+            console.log(error);
+        });
+    return res;
+}
+
 async function getAvailableProjects() {
     return axios
         .get(BASE_API_URL + API_URL + '/projects')
@@ -125,6 +153,7 @@ async function getCollaborators(userUrl) {
 export {
     newUser,
     updateUser,
+    newProject,
     getAvailableProjects,
     getUserProjects,
     getUser,

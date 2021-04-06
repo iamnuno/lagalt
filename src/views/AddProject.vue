@@ -222,20 +222,14 @@
 </template>
 
 <script>
-import {
-  INDUSTRY,
-  STATUS,
-  SKILLS,
-  TAGS,
-  API_URL,
-} from "../constants/constants";
+import { INDUSTRY, STATUS, SKILLS, TAGS } from "../constants/constants";
+
+import { newProject } from "../utils/apiService";
 
 import SkillCheckbox from "../components/SkillCheckbox";
 import TagCheckbox from "../components/TagCheckbox";
 
 import { required, url } from "vuelidate/lib/validators";
-
-import axios from "axios";
 
 export default {
   components: { SkillCheckbox, TagCheckbox },
@@ -282,28 +276,44 @@ export default {
     }));
   },
   methods: {
-    addProject() {
+    async addProject() {
       if (!this.$v.$invalid) {
-        axios
-          .post(API_URL + "/projects/2", {
-            projectTitle: this.title,
-            projectDescription: this.description,
-            projectProgress: this.status.toUpperCase().replace(" ", "_"),
-            projectType: this.type.toUpperCase().replace(" ", "_"),
-            projectSkills: this.projectSkills,
-            projectTags: this.projectTags,
-            externalUrl: this.externalUrl,
-            projectBackgroundPhoto: this.backgroundUrl,
-            projectPhotos: this.photos,
-          })
-          .then((res) => {
-            console.log(res);
-            alert("Project created successfully");
-          })
-          .catch((error) => {
-            console.log(error);
-            alert("Project not created");
-          });
+        const project = {
+          userId: this.$store.getters.userId,
+          projectTitle: this.title,
+          projectDescription: this.description,
+          projectProgress: this.status.toUpperCase().replace(" ", "_"),
+          projectType: this.type.toUpperCase().replace(" ", "_"),
+          projectSkills: this.projectSkills,
+          projectTags: this.projectTags,
+          externalUrl: this.externalUrl,
+          projectBackgroundPhoto: this.backgroundUrl,
+          projectPhotos: this.photos,
+        };
+
+        let res = await newProject(project);
+        console.log(res);
+
+        // axios
+        //   .post(API_URL + "/projects/2", {
+        //     projectTitle: this.title,
+        //     projectDescription: this.description,
+        //     projectProgress: this.status.toUpperCase().replace(" ", "_"),
+        //     projectType: this.type.toUpperCase().replace(" ", "_"),
+        //     projectSkills: this.projectSkills,
+        //     projectTags: this.projectTags,
+        //     externalUrl: this.externalUrl,
+        //     projectBackgroundPhoto: this.backgroundUrl,
+        //     projectPhotos: this.photos,
+        //   })
+        //   .then((res) => {
+        //     console.log(res);
+        //     alert("Project created successfully");
+        //   })
+        //   .catch((error) => {
+        //     console.log(error);
+        //     alert("Project not created");
+        //   });
       } else {
         alert("Please fill the form correctly.");
       }
