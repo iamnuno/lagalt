@@ -6,15 +6,11 @@ Vue.use(Vuex);
 export const store = new Vuex.Store({
     state: {
         userId: '',
-        jwt: '',
         isAuthorized: false,
     },
     getters: {
         userId: state => {
             return state.userId;
-        },
-        jwt: state => {
-            return state.jwt;
         },
         isAuthorized: state => {
             return state.isAuthorized;
