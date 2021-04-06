@@ -9,8 +9,9 @@ import Register from '../views/Register';
 import Login from '../views/Login';
 import { onAuthStateInit } from '../utils/firebase';
 import { store } from '../utils/store';
-Vue.use(VueRouter);
 
+
+Vue.use(VueRouter);
 const routes = [
     { path: '/', name: 'home', component: Home },
     { path: '/project/new', name: 'addProject', component: AddProject },
@@ -32,11 +33,7 @@ const router = new VueRouter({
 
 router.beforeEach(async (to, from, next) => {
     await onAuthStateInit()
-    if ((to.name !== 'login' && to.name !== 'register') && !store.getters.isAuthorized) {
-        next({ name: 'login' })
-
-
-    } else if ((to.name === 'login' || to.name === 'register') && await store.getters.isAuthorized) {
+    if ((to.name === 'login' || to.name === 'register') && await store.getters.isAuthorized) {
         next({ name: 'home' })
     } else {
         next()

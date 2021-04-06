@@ -169,17 +169,22 @@
 </template>
 
 <script>
-import axios from "axios";
+import {
+  getUser,
+  updateUser,
+  getUsersProjectsById,
+  getProjectById,
+} from "../utils/apiService";
 
 import SkillCheckbox from "../components/SkillCheckbox";
-import { SKILLS, API_URL } from "../constants/constants";
+import { SKILLS } from "../constants/constants";
 
 export default {
   components: { SkillCheckbox },
   data() {
     return {
       isEditing: false,
-      userId: 2,
+      userId: "",
       name: "",
       description: "",
       portfolio: "",
@@ -192,6 +197,7 @@ export default {
     };
   },
   mounted() {
+    this.userId = this.$store.getters.userId;
     this.addHasSkillBoolean();
     this.getUserInformation();
   },
@@ -207,79 +213,65 @@ export default {
       }));
     },
     //TODO: implement real user verification
-    getUserInformation() {
-      axios
-        .get(API_URL + `/users/${this.userId}`)
-        .then((res) => {
-          this.name = res.data.userName;
-          this.email = res.data.userEmail;
-          this.description = res.data.userDescription;
-          this.visibility = res.data.userVisibility;
-          this.portfolio = res.data.userPortfolio;
+    async getUserInformation() {
+      let user = await getUser();
 
-          this.userSkills = res.data.userSkills;
+      this.name = user.userName;
+      this.email = user.userEmail;
+      this.description = user.userDescription;
+      this.visibility = user.userVisibility;
+      this.portfolio = user.userPortfolio;
 
-          // checkboxes need to be checked for skills user has
-          this.availableSkills.forEach((skill) => {
-            if (this.userSkills.includes(skill.name)) skill.hasSkill = true;
-          });
+      this.userSkills = user.userSkills;
 
-          this.userProjects = res.data.userProjects;
+      // checkboxes need to be checked for skills user has
+      this.availableSkills.forEach((skill) => {
+        if (this.userSkills.includes(skill.name)) skill.hasSkill = true;
+      });
 
-          this.updateProjectApplications();
-        })
-        .catch((error) => console.log(error));
+      this.userProjects = user.userProjects;
+
+      this.updateProjectApplications();
     },
     // show project title and application status
-    updateProjectApplications() {
-      this.userProjects.forEach((project) => {
+    async updateProjectApplications() {
+      this.userProjects.forEach(async (project) => {
         let projectId = project.substring(project.lastIndexOf("/") + 1);
-        axios
-          .get(API_URL + `/users-projects/${this.userId}/${projectId}`)
-          .then((res) => {
-            let projectTile = "";
-            let status = res.data.approvalStatus;
-            let isAdmin = res.data.admin;
-            let id = res.data.id;
-            axios
-              .get(API_URL + `/projects/${projectId}`)
-              .then((res) => {
-                projectTile = res.data.projectTitle;
-                this.projectApplications.push({
-                  title: projectTile,
-                  status: status,
-                  isAdmin,
-                  id,
-                });
-              })
-              .catch((error) => console.log(error));
-          })
-          .catch((error) => console.log(error));
+
+        let usersProjects = await getUsersProjectsById(this.userId, projectId);
+
+        let projectTitle = "";
+        let status = usersProjects.approvalStatus;
+        let isAdmin = usersProjects.admin;
+        let id = usersProjects.id;
+
+        let projectData = await getProjectById(projectId);
+        projectTitle = projectData.projectTitle;
+        this.projectApplications.push({
+          title: projectTitle,
+          status: status,
+          isAdmin,
+          id,
+        });
       });
     },
     editProfile() {
       this.isEditing = !this.isEditing;
     },
-    saveProfile() {
+    async saveProfile() {
       this.isEditing = !this.isEditing;
 
-      axios
-        .put(API_URL + `/users/${this.userId}`, {
-          userName: this.name,
-          userEmail: this.email,
-          userDescription: this.description,
-          userVisibility: this.visibility,
-          userPortfolio: this.portfolio,
-          userSkills: this.userSkills,
-        })
-        .then((res) => {
-          console.log(res);
-          alert("User updated successfully");
-        })
-        .catch((error) => {
-          console.log(error);
-          alert("User not updated");
-        });
+      let user = {
+        userId: this.userId,
+        userName: this.name,
+        userEmail: this.email,
+        userDescription: this.description,
+        userVisibility: this.visibility,
+        userPortfolio: this.portfolio,
+        userSkills: this.userSkills,
+      };
+
+      await updateUser(user);
     },
     updateSkills(e) {
       this.availableSkills.forEach((skill) => {

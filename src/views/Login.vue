@@ -53,8 +53,12 @@ export default {
   },
   methods: {
     async login() {
-      if (!(await firebase.login(this.getEmail, this.password)))
+      if (await firebase.login(this.getEmail, this.password)) {
+        console.log(await firebase.getJwt());
+        this.$router.push({ name: "home" });
+      } else {
         this.error = true;
+      }
     },
   },
   computed: {

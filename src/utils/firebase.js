@@ -2,6 +2,7 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import 'firebase/firestore';
 import { store } from './store'
+import { newUser, getUser } from './apiService';
 
 const firebaseConfig = {
     apiKey: "AIzaSyBQtLPSvrYafuLKh9QXMr0745iICV3SgsE",
@@ -14,6 +15,7 @@ const firebaseConfig = {
 }
 
 firebase.initializeApp(firebaseConfig);
+
 let db = firebase.firestore();
 async function login(username, password) {
 
@@ -25,8 +27,10 @@ async function login(username, password) {
                 var errorCode = error.code;
                 var errorMessage = error.message;
                 console.log(errorCode + "  " + errorMessage);
-
+                throw "error"
             });
+
+        store.commit("setUser", await getUser())
         return true;
     } catch (err) {
         console.error(err);
@@ -46,19 +50,20 @@ async function register(username, email, password) {
                 throw "error"
             });
 
-        let id = 2;// await newUser(username, email);
+        let id = await newUser(username, email);
 
         firebase.auth().onAuthStateChanged((user) => {
-            db.collection("users").doc(user.uid).set({
-                id: id,
-            })
-                .then(() => {
-                    console.log("Document successfully written!");
+            if (user) {
+                db.collection("users").doc(user.uid).set({
+                    id: id,
                 })
-                .catch((error) => {
-                    console.error("Error writing document: ", error);
-                });
-
+                    .then(() => {
+                        console.log("Document successfully written!");
+                    })
+                    .catch((error) => {
+                        console.error("Error writing document: ", error);
+                    });
+            }
         })
         return true;
     } catch (error) {
@@ -75,15 +80,15 @@ async function logout() {
     }
 }
 
-function getJwt() {
-    firebase
-        .auth()
+async function getJwt() {
+    return firebase.auth()
         .currentUser.getIdToken(true)
         .then(function (idToken) {
             return idToken;
         })
         .catch(function (error) {
             console.error(error);
+            console.error("user is not logged in yet!");
             return null;
         });
 }

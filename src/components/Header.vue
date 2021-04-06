@@ -72,7 +72,7 @@ export default {
   data() {
     return {
       title: "Lagalt",
-      username: "Ahmad",
+      username: this.$store.getters.user.userName,
     };
   },
   computed: mapState(["isAuthorized"]),

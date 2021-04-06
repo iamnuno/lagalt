@@ -2,19 +2,19 @@
   <div class="card" @click="toProjectDetails">
     <div class="row">
       <div class="initials">{{ projectInitials }}</div>
-      <div class="name">{{ project.name }}</div>
+      <div class="name">{{ project.projectTitle }}</div>
       <div class="tags">
-        <span v-for="tag in project.tags" :key="tag">{{ tag }}</span>
+        <span v-for="tag in project.projectTags" :key="tag">{{ tag }}</span>
       </div>
       <div class="skills">
         <span
-          v-for="skill in project.skills"
+          v-for="skill in project.projectSkills"
           :key="skill"
-          :class="{ match_skill: user.skills.includes(skill) }"
+          :class="{ match_skill: user.userSkills.includes(skill) }"
           >{{ skill }}</span
         >
       </div>
-      <div class="type">{{ project.type }}</div>
+      <div class="type text-capitalize">{{ industry }}</div>
     </div>
   </div>
 </template>
@@ -22,21 +22,24 @@
 <script>
 export default {
   props: ["project", "user"],
+
   computed: {
     projectInitials() {
       let initials = "";
 
-      const nameArray = this.project.name.split(" ");
+      const nameArray = this.project.projectTitle.split(" ");
       initials += nameArray[0][0];
       initials += nameArray[nameArray.length - 1][0];
 
       return initials.toUpperCase();
     },
+    industry() {
+      return this.project.projectType.replaceAll("_", " ").toLowerCase();
+    },
   },
   methods: {
-    // TODO: implement real routing
     toProjectDetails() {
-      const id = this.project.id;
+      const id = this.project.projectId;
       this.$router.push({
         name: "project",
         params: { id },
