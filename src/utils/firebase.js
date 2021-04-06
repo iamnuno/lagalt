@@ -29,8 +29,6 @@ async function login(username, password) {
                 console.log(errorCode + "  " + errorMessage);
                 throw "error"
             });
-
-        store.commit("setUser", await getUser())
         return true;
     } catch (err) {
         console.error(err);
@@ -105,9 +103,11 @@ const onAuthStateChangedPromise = new Promise(async (resolve, reject) => {
             });
             store.commit('signin');
             store.commit('setUserId', userId);
+            store.commit("setUser", await getUser())
         } else {
             store.commit('signout');
             store.commit('setUserId', userId);
+            store.commit("setUser", { userName: "unknown" })
         }
         resolve(userId)
     }, err => {

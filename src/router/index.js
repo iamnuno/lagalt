@@ -21,7 +21,7 @@ const routes = [
         name: 'ProjectAdminView',
         component: ProjectAdminView,
     },
-    { path: '/profile', name: 'Profile', component: UserProfile },
+    { path: '/profile', name: 'profile', component: UserProfile },
     { path: '/register', name: 'register', component: Register },
     { path: '/login', name: 'login', component: Login },
 ];
