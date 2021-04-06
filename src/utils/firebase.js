@@ -2,7 +2,7 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import 'firebase/firestore';
 import { store } from './store'
-import { newUser } from './apiService';
+import { newUser, getUser } from './apiService';
 
 const firebaseConfig = {
     apiKey: "AIzaSyBQtLPSvrYafuLKh9QXMr0745iICV3SgsE",
@@ -27,8 +27,10 @@ async function login(username, password) {
                 var errorCode = error.code;
                 var errorMessage = error.message;
                 console.log(errorCode + "  " + errorMessage);
-
+                throw "error"
             });
+
+        store.commit("setUser", await getUser())
         return true;
     } catch (err) {
         console.error(err);

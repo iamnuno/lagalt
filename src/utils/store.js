@@ -7,6 +7,7 @@ export const store = new Vuex.Store({
     state: {
         userId: '',
         isAuthorized: false,
+        user: "unknown",
     },
     getters: {
         userId: state => {
@@ -14,6 +15,9 @@ export const store = new Vuex.Store({
         },
         isAuthorized: state => {
             return state.isAuthorized;
+        },
+        user: state => {
+            return state.user;
         }
     },
     mutations: {
@@ -25,6 +29,10 @@ export const store = new Vuex.Store({
         },
         setUserId: (state, payload) => {
             state.userId = payload;
+        },
+        setUser: (state, payload) => {
+            state.user = payload;
         }
-    }
+    },
+
 })
