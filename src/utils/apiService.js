@@ -1,6 +1,15 @@
 import axios from "axios";
 import { BASE_API_URL, API_URL } from "../constants/constants";
 import { store } from './store';
+import * as firebase from './firebase'
+
+const config = async function () {
+    return {
+        headers: {
+            Authorization: "Bearer " + await firebase.getJwt()
+        }
+    }
+}
 
 async function newUser(username, email) {
     let res;
@@ -8,7 +17,7 @@ async function newUser(username, email) {
         userName: username,
         userEmail: email,
         userSkills: null
-    }).then((response) => {
+    }, config).then((response) => {
         res = response.data.userId;
     }).catch(function (error) {
         console.log(error);
@@ -25,20 +34,20 @@ async function getAvailableProjects() {
 
 async function getUserProjects() {
     return axios
-        .get(BASE_API_URL + API_URL + '/projects')
+        .get(BASE_API_URL + API_URL + '/projects', config)
         .then((response) => { return response.data })
         .catch((err) => alert(err));
 }
 
 async function getUser() {
     return axios
-        .get(BASE_API_URL + API_URL + '/users/' + store.getters.userId)
+        .get(BASE_API_URL + API_URL + '/users/' + store.getters.userId, config)
         .then((response) => { return response.data })
         .catch((err) => alert(err));
 }
 
 async function getProjectById(id) {
-    return axios.get(BASE_API_URL + API_URL + '/projects/' + id)
+    return axios.get(BASE_API_URL + API_URL + '/projects/' + id), config
         .then((response) => { return response.data })
         .catch((err) => alert(err));
 }
