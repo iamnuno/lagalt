@@ -460,6 +460,7 @@
 import axios from "axios";
 import { required, url } from "vuelidate/lib/validators";
 import {
+  BASE_API_URL,
   API_URL,
   STATUS,
   INDUSTRY,
@@ -474,7 +475,7 @@ export default {
   data() {
     return {
       projectId: this.$route.params.id,
-      userId: 2,
+      userId: this.$store.getters.userId,
       announcements: [],
       title: "",
       description: "",
@@ -600,17 +601,25 @@ export default {
     updateProject() {
       if (!this.$v.$invalid) {
         axios
-          .put(API_URL + `/projects/${this.projectId}`, {
-            projectTitle: this.title,
-            projectProgress: this.status.toUpperCase().replace(" ", "_"),
-            projectType: this.type.toUpperCase().replace(" ", "_"),
-            projectDescription: this.description,
-            externalUrl: this.externalUrl,
-            projectBackgroundPhoto: this.backgroundUrl,
-            projectPhotos: this.photos,
-            projectSkills: this.projectSkills,
-            projectTags: this.projectTags,
-          })
+          .put(
+            BASE_API_URL + API_URL + `/projects/${this.projectId}`,
+            {
+              projectTitle: this.title,
+              projectProgress: this.status.toUpperCase().replace(" ", "_"),
+              projectType: this.type.toUpperCase().replace(" ", "_"),
+              projectDescription: this.description,
+              externalUrl: this.externalUrl,
+              projectBackgroundPhoto: this.backgroundUrl,
+              projectPhotos: this.photos,
+              projectSkills: this.projectSkills,
+              projectTags: this.projectTags,
+            },
+            {
+              headers: {
+                Authorization: "Bearer " + this.$store.getters.jwt,
+              },
+            }
+          )
           .then((res) => {
             console.log(res);
             // update / delete messages
@@ -623,12 +632,20 @@ export default {
                 );
               } else {
                 axios
-                  .put(API_URL + `/project-cards/${message.id}`, {
-                    projectCardTitle: message.title,
-                    projectCardText: message.text,
-                    projectCardCreatedAt: message.createdAt,
-                    projectCardUpdatedAt: message.updatedAt,
-                  })
+                  .put(
+                    BASE_API_URL + API_URL + `/project-cards/${message.id}`,
+                    {
+                      projectCardTitle: message.title,
+                      projectCardText: message.text,
+                      projectCardCreatedAt: message.createdAt,
+                      projectCardUpdatedAt: message.updatedAt,
+                    },
+                    {
+                      headers: {
+                        Authorization: "Bearer " + this.$store.getters.jwt,
+                      },
+                    }
+                  )
                   .then((res) => {
                     console.log(res);
                   })
@@ -640,7 +657,14 @@ export default {
             this.announcements.forEach((announcement) => {
               // delete announcement
               if (announcement.isDelete === true) {
-                axios.delete(API_URL + `/announcements/${announcement.id}`);
+                axios.delete(
+                  BASE_API_URL + API_URL + `/announcements/${announcement.id}`,
+                  {
+                    headers: {
+                      Authorization: "Bearer " + this.$store.getters.jwt,
+                    },
+                  }
+                );
                 // do not show the announcement anymore
                 this.announcements = this.announcements.filter(
                   (a) => a.id !== announcement.id
@@ -648,13 +672,21 @@ export default {
               } else if (announcement.isCreate == true) {
                 // add new announcement
                 axios
-                  .post(API_URL + `/announcements`, {
-                    announcementTitle: announcement.title,
-                    announcementText: announcement.text,
-                    announcementCreatedAt: new Date().getTime(),
-                    announcementUpdatedAt: new Date().getTime(),
-                    project: { projectId: this.projectId },
-                  })
+                  .post(
+                    BASE_API_URL + API_URL + `/announcements`,
+                    {
+                      announcementTitle: announcement.title,
+                      announcementText: announcement.text,
+                      announcementCreatedAt: new Date().getTime(),
+                      announcementUpdatedAt: new Date().getTime(),
+                      project: { projectId: this.projectId },
+                    },
+                    {
+                      headers: {
+                        Authorization: "Bearer " + this.$store.getters.jwt,
+                      },
+                    }
+                  )
                   .then((res) => {
                     console.log(res);
                   })
@@ -662,12 +694,22 @@ export default {
               } else {
                 // update announcement
                 axios
-                  .put(API_URL + `/announcements/${announcement.id}`, {
-                    announcementTitle: announcement.title,
-                    announcementText: announcement.text,
-                    announcementCreatedAt: announcement.createdAt,
-                    announcementUpdatedAt: announcement.updatedAt,
-                  })
+                  .put(
+                    BASE_API_URL +
+                      API_URL +
+                      `/announcements/${announcement.id}`,
+                    {
+                      announcementTitle: announcement.title,
+                      announcementText: announcement.text,
+                      announcementCreatedAt: announcement.createdAt,
+                      announcementUpdatedAt: announcement.updatedAt,
+                    },
+                    {
+                      headers: {
+                        Authorization: "Bearer " + this.$store.getters.jwt,
+                      },
+                    }
+                  )
                   .then((res) => {
                     console.log(res);
                   })
@@ -678,11 +720,17 @@ export default {
               this.applications.forEach((application) => {
                 axios
                   .put(
-                    API_URL +
+                    BASE_API_URL +
+                      API_URL +
                       `/users-projects/${application.id.userId}/${application.id.projectId}`,
                     {
                       approvalStatus: application.status,
                       motivation: application.motivation,
+                    },
+                    {
+                      headers: {
+                        Authorization: "Bearer " + this.$store.getters.jwt,
+                      },
                     }
                   )
                   .then((res) => console.log(res))
@@ -721,7 +769,11 @@ export default {
     },
     getProjectDetails() {
       axios
-        .get(API_URL + `/projects/${this.projectId}`)
+        .get(BASE_API_URL + API_URL + `/projects/${this.projectId}`, {
+          headers: {
+            Authorization: "Bearer " + this.$store.getters.jwt,
+          },
+        })
         .then((res) => {
           this.title = res.data.projectTitle;
           this.description = res.data.projectDescription;
@@ -754,7 +806,11 @@ export default {
         let projectCardId = url.substring(url.lastIndexOf("/") + 1);
 
         axios
-          .get(API_URL + `/project-cards/${projectCardId}`)
+          .get(BASE_API_URL + API_URL + `/project-cards/${projectCardId}`, {
+            headers: {
+              Authorization: "Bearer " + this.$store.getters.jwt,
+            },
+          })
           .then((res) => {
             let id = res.data.projectCardId;
             let title = res.data.projectCardTitle;
@@ -780,7 +836,16 @@ export default {
         let userId = url.substring(url.lastIndexOf("/") + 1);
 
         axios
-          .get(API_URL + `/users-projects/${userId}/${this.projectId}`)
+          .get(
+            BASE_API_URL +
+              API_URL +
+              `/users-projects/${userId}/${this.projectId}`,
+            {
+              headers: {
+                Authorization: "Bearer " + this.$store.getters.jwt,
+              },
+            }
+          )
           .then((res) => {
             let status = res.data.approvalStatus;
             let motivation = "";
@@ -789,7 +854,11 @@ export default {
 
             motivation = res.data.motivation;
             axios
-              .get(API_URL + `/users/${userId}`)
+              .get(BASE_API_URL + API_URL + `/users/${userId}`, {
+                headers: {
+                  Authorization: "Bearer " + this.$store.getters.jwt,
+                },
+              })
               .then((res) => {
                 skills = res.data.userSkills;
                 name = res.data.userName;
@@ -811,7 +880,11 @@ export default {
       announcementsURLs.forEach((url) => {
         let announcementId = url.substring(url.lastIndexOf("/") + 1);
         axios
-          .get(API_URL + `/announcements/${announcementId}`)
+          .get(BASE_API_URL + API_URL + `/announcements/${announcementId}`, {
+            headers: {
+              Authorization: "Bearer " + this.$store.getters.jwt,
+            },
+          })
           .then((res) => {
             let id = res.data.announcementId;
             let title = res.data.announcementTitle;
