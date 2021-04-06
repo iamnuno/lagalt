@@ -240,6 +240,7 @@ export default {
 
         let usersProjects = await getUsersProjectsById(this.userId, projectId);
 
+        console.log(usersProjects);
         let projectTitle = "";
         let status = usersProjects.approvalStatus;
         let isAdmin = usersProjects.admin;

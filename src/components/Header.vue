@@ -29,7 +29,7 @@
           <div
             class="bg-light text-dark my-1 px-2 rounded-pill username shadow"
           >
-            {{ username }}
+            {{ user.userName }}
           </div>
         </div>
         <div class="d-flex flex-column icon shadow-sm rounded-circle">
@@ -39,18 +39,18 @@
         <div
           class="dropdown-container d-none flex-column position-absolute bg-white rounded shadow"
         >
-          <div
+          <router-link
             class="d-block dropdown-item text-dark rounded text-center mb-1"
-            @click="toProfile"
+            :to="{ name: 'profile' }"
           >
             Profile
-          </div>
-          <div
+          </router-link>
+          <router-link
             class="d-block dropdown-item text-dark rounded text-center mb-1"
-            @click="toAddProject"
+            :to="{ name: 'addProject' }"
           >
             New project
-          </div>
+          </router-link>
           <div
             class="d-block dropdown-item text-dark rounded text-center mb-1"
             @click="logout"
@@ -72,10 +72,9 @@ export default {
   data() {
     return {
       title: "Lagalt",
-      username: this.$store.getters.user.userName,
     };
   },
-  computed: mapState(["isAuthorized"]),
+  computed: mapState(["isAuthorized", "user"]),
   methods: {
     async logout() {
       if (await firebase.logout()) {
@@ -83,15 +82,6 @@ export default {
       } else {
         console.log("something went wrong! try again.");
       }
-    },
-    toProfile() {
-      this.$router.push("/profile");
-    },
-    toAddProject() {
-      this.$router.push("/project/new");
-    },
-    toHome() {
-      this.$router.push({ name: "Home" });
     },
   },
 };
