@@ -29,6 +29,8 @@ async function login(username, password) {
                 console.log(errorCode + "  " + errorMessage);
                 throw "error"
             });
+        store.commit('updateJWT', await getJwt());
+
         return true;
     } catch (err) {
         console.error(err);
@@ -47,6 +49,7 @@ async function register(username, email, password) {
                 console.log(errorCode + "  " + errorMessage);
                 throw "error"
             });
+        store.commit('updateJWT', await getJwt());
 
         let id = await newUser(username, email);
 
@@ -103,7 +106,6 @@ const onAuthStateChangedPromise = new Promise(async (resolve, reject) => {
             });
             store.commit('signin');
             store.commit('setUserId', userId);
-            store.commit('updateJWT', await getJwt());
             store.commit("setUser", await getUser())
         } else {
             store.commit('signout');

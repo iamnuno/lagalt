@@ -1,13 +1,17 @@
 import axios from 'axios';
 import { BASE_API_URL, API_URL } from '../constants/constants';
 import { store } from './store';
+import * as firebase from './firebase'
 
+async function config() {
+    store.commit('updateJWT', await firebase.getJwt());
 
-const config = {
-    headers: {
-        Authorization: 'Bearer  ' + store.getters.jwt,
+    return {
+        headers: {
+            Authorization: 'Bearer ' + store.getters.jwt,
+        }
     }
-};
+}
 
 async function newUser(username, email) {
     let res;
@@ -19,7 +23,7 @@ async function newUser(username, email) {
                 userEmail: email,
                 userSkills: null,
             },
-            config
+            await config()
         )
         .then((response) => {
             res = response.data.userId;
@@ -43,7 +47,7 @@ async function updateUser(user) {
                 userPortfolio: user.userPortfolio,
                 userSkills: user.userSkills,
             },
-            config
+            await config()
         )
         .then((response) => {
             res = response.data.userId;
@@ -71,7 +75,7 @@ async function newProject(project) {
                 projectBackgroundPhoto: project.BackgroundPhoto,
                 projectPhotos: project.projectPhotos,
             },
-            config
+            await config()
         )
         .then((response) => {
             res = response.data;
@@ -83,7 +87,7 @@ async function newProject(project) {
 }
 
 async function getAvailableProjects(industry = "", search = "", status = "") {
-    console.log(config)
+    console.log(await config())
     let query = "";
 
     if (industry != "" || search != "" || status != "") {
@@ -91,7 +95,7 @@ async function getAvailableProjects(industry = "", search = "", status = "") {
     }
 
     return axios
-        .get(BASE_API_URL + API_URL + '/projects' + query, config)
+        .get(BASE_API_URL + API_URL + '/projects' + query, await config())
         .then((response) => {
             return response.data;
         })
@@ -100,7 +104,7 @@ async function getAvailableProjects(industry = "", search = "", status = "") {
 
 async function getUserProjects() {
     return axios
-        .get(BASE_API_URL + API_URL + '/projects', config)
+        .get(BASE_API_URL + API_URL + '/projects', await config())
         .then((response) => {
             return response.data;
         })
@@ -109,7 +113,7 @@ async function getUserProjects() {
 
 async function getUser() {
     return axios
-        .get(BASE_API_URL + API_URL + '/users/' + store.getters.userId, config)
+        .get(BASE_API_URL + API_URL + '/users/' + store.getters.userId, await config())
         .then((response) => {
             return response.data;
         })
@@ -118,7 +122,7 @@ async function getUser() {
 
 async function getProjectById(id) {
     return axios
-        .get(BASE_API_URL + API_URL + '/projects/' + id, config)
+        .get(BASE_API_URL + API_URL + '/projects/' + id, await config())
         .then((response) => {
             return response.data;
         })
@@ -129,7 +133,7 @@ async function getUsersProjectsById(userId, projectId) {
     return axios
         .get(
             BASE_API_URL + API_URL + `/users-projects/${userId}/${projectId}`,
-            config
+            await config()
         )
         .then((response) => {
             return response.data;
