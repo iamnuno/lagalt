@@ -1,41 +1,45 @@
 <template>
   <div class="d-flex flex-row flex-grow-1">
     <!-- announcements -->
-    <div class="color w-25 d-flex flex-column align-content-center">
+    <div
+      v-if="showAnnouncements"
+      class="color w-25 d-flex flex-column align-content-center"
+    >
       <div class="py-4 h3 text-center mx-2 text-truncate">Announcements</div>
       <!-- card -->
       <div>
         <ProjectCard
-          v-for="announcement in announcements"
+          v-for="announcement in project.announcements"
           :key="announcement.id"
           :data="announcement"
         />
       </div>
     </div>
-
     <!-- body -->
     <div class="flex-grow-1 w-100 d-flex flex-column">
       <div
         id="title"
         class="bg-light rounded shadow-lg p-2 w-1 h5 position-absolute m-3 no-pointer text-capitalize"
       >
-        {{ title }}
+        {{ project.projectTitle }}
       </div>
       <div class="img" />
       <div id="status" class="d-flex flex-row justify-content-between p-2 mx-4">
-        <div class="in-progress no-pointer text-white rounded shadow p-1">
+        <div
+          class="in-progress no-pointer text-white rounded shadow p-1 text-capitalize"
+        >
           {{ status }}
         </div>
         <!-- SPACE -->
         <div class="flex-grow-1" />
-        <NewApplicationModal v-if="!isCreator" />
-        <div
-          v-if="isCreator"
+        <NewApplicationModal v-if="!isAdmin" :projectId="this.id" />
+        <router-link
+          v-if="isAdmin"
           class="pointer rounded bg-dark text-white shadow p-1 bttn"
-          @click="toAdminView()"
+          :to="{ name: 'ProjectAdminView', id: id }"
         >
           Admin View
-        </div>
+        </router-link>
       </div>
       <div class="breakline mx-2" />
       <div class="d-flex flex-column m-2">
@@ -49,7 +53,7 @@
             Tags
           </div>
           <div
-            v-for="(tag, index) in tags"
+            v-for="(tag, index) in project.projectTags"
             :key="index"
             class="p-1 m-1 text-center rounded shadow bg-warning text-white no-pointer"
           >
@@ -66,7 +70,7 @@
             Skills
           </div>
           <div
-            v-for="(skill, index) in skills"
+            v-for="(skill, index) in project.projectSkills"
             :key="index"
             class="p-1 m-1 text-center rounded shadow bg-warning text-white no-pointer"
           >
@@ -78,11 +82,10 @@
       <!-- PROJECT CARDS -->
       <div class="h3 mx-2 mb-1">Messages</div>
       <div id="projectcards" class="d-flex flex-row flex-wrap">
-        <!-- TODO: FETCH PROJECT CARDS INSTEAD OF ANNOUNCEMENTS WHEN THE ENDPOINTS ARE READY -->
         <ProjectCard
-          v-for="announcement in announcements"
-          :key="announcement.id"
-          :data="announcement"
+          v-for="projectCard in project.projectCards"
+          :key="projectCard.id"
+          :data="projectCard"
         />
         <div class="m-2">
           <NewProjectCardModal />
@@ -92,7 +95,7 @@
       <!-- COLLABORATORS LIST -->
       <div class="d-flex flex-row">
         <div
-          v-if="collaborators.length !== 0"
+          v-if="project.projectUsers !== undefined"
           id="collaborators"
           class="bg-white shadow rounded d-flex flex-column w-25 m-2"
         >
@@ -100,9 +103,9 @@
           <div class="breakline mx-2" />
           <div class="scorllable scrollbar m-2 rounded">
             <UserCard
-              v-for="(collaborator, index) in collaborators"
-              :key="index"
-              :name="collaborator.name"
+              v-for="collaborator in collaborators"
+              :key="collaborator.userId"
+              :name="collaborator.userName"
             />
           </div>
         </div>
@@ -113,7 +116,7 @@
             <div class="breakline mx-2 mb-2" />
             <!-- show images -->
             <ImageModal
-              v-for="(photo, index) in photos"
+              v-for="(photo, index) in project.projectPhotos"
               :key="index"
               :photo="photo"
               class="m-2"
@@ -143,22 +146,22 @@ import NewApplicationModal from "../components/NewApplicationModal.vue";
 import NewProjectCardModal from "../components/NewProjectCardModal.vue";
 import ProjectCard from "../components/ProjectCard";
 import UserCard from "../components/UserCard.vue";
+import {
+  getProjectById,
+  getGitCommit,
+  getCollaborators,
+  isAdmin,
+} from "../utils/apiService";
 
 export default {
   name: "project-user-view",
   data() {
     return {
-      id: --this.$route.params.id,
-      announcements: [],
-      projects: [],
+      id: this.$route.params.id,
+      project: {},
       commits: [],
       collaborators: [],
-      tags: [],
-      skills: [],
-      photos: [],
-      status: "in progress",
-      title: "",
-      isCreator: true,
+      isAdmin: false,
     };
   },
   components: {
@@ -170,58 +173,40 @@ export default {
     ImageModal,
   },
   created: async function () {
-    // TODO: UPDATE isCreator IF THE VIEWER HAS CREATED THE SELECTED PROJECT
-    await fetch("http://localhost:3000/projects")
-      .then((res) => res.json())
-      .then((data) => (this.projects = data))
-      .catch((err) => console.log(err));
-
-    await fetch(this.projects[this.id].repo)
-      .then((res) => res.json())
-      .then((data) => (this.commits = data))
-      .catch((err) => console.log(err));
-    this.announcements = this.projects[this.id].announcements;
-    this.title = this.projects[this.id].name;
-
-    this.collaborators = [
-      { name: "ahmad" },
-      { name: "numo" },
-      { name: "ahmad" },
-      { name: "numo" },
-      { name: "ahmad" },
-      { name: "numo" },
-      { name: "ahmad" },
-      { name: "numo" },
-      { name: "ahmad" },
-      { name: "numo" },
-      { name: "ahmad" },
-      { name: "numo" },
-      { name: "ahmad" },
-      { name: "numo" },
-      { name: "ahmad" },
-      { name: "numo" },
-      { name: "ahmad" },
-      { name: "numo" },
-      { name: "ahmad" },
-      { name: "numo" },
-      { name: "ahmad" },
-      { name: "numo" },
-    ];
-    this.tags = this.projects[this.id].tags;
-    this.skills = this.projects[this.id].skills;
-    this.photos = this.projects[this.id].photos;
+    this.project = await getProjectById(this.id);
+    console.log(this.project);
+    this.project.projectUsers.map(async (e) => {
+      this.collaborators.push(await getCollaborators(e));
+    });
+    const user = await isAdmin(this.id);
+    console.log(user);
+    this.isAdmin = user.admin;
+    this.commits = await getGitCommit(this.project.externalUrl);
   },
   computed: {
     isAnnouncements() {
-      return this.projects.length != 0;
+      return this.project.projectCards.length != 0;
     },
     isCommits() {
-      return this.commits.length > 1;
+      return this.commits != undefined;
+    },
+    status() {
+      if (this.project.projectType != undefined) {
+        return this.project.projectType.replaceAll("_", " ").toLowerCase();
+      } else {
+        return "";
+      }
+    },
+    showAnnouncements() {
+      if (this.project.announcements != undefined) {
+        if (this.project.announcements.length != 0) return true;
+      }
+      return false;
     },
   },
   methods: {
     toAdminView() {
-      let id = this.id;
+      const id = this.id;
       this.$$route.push({ name: "admin", props: id });
     },
   },

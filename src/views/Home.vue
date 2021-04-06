@@ -1,7 +1,22 @@
 <template>
   <div class="flex-grow-1 d-flex flex-column m-5 p-4 rounded shadow">
+    <div class="d-flex flex-column mb-5" v-if="isAuthorized">
+      <div class="flex-grow-1 text-nowrap h4">My Projects</div>
+      <div class="box breakline my-2" />
+      <div v-if="userProjects.length != 0">
+        <ProjectBanner
+          v-for="project in userProjects"
+          :key="project.projectId"
+          :project="project"
+          :user="user"
+        />
+        <div v-if="userProjects.length == 0" class="text-center">
+          You don't have any projects yet.
+        </div>
+      </div>
+    </div>
     <div class="d-flex flex-row flex-wrap">
-      <h4 class="flex-grow-1 text-nowrap">Available availableProjects</h4>
+      <h4 class="flex-grow-1 text-nowrap">Available Projects</h4>
       <div class="break" />
       <!-- filter -->
       <div class="rounded box d-flex flex-row mr-2">
@@ -67,7 +82,7 @@
               @click="filterByStatus($event)"
               class="mx-2 pointer rounded item"
             >
-              Initialized
+              Founding
             </div>
           </div>
         </div>
@@ -92,7 +107,7 @@
         <font-awesome-icon
           :icon="['fas', 'search']"
           size="1x"
-          class="m-2 rounded-circle text-light shadow"
+          class="m-2 rounded-circle text-light shadow pointer"
           @click="searchButton()"
         />
       </div>
@@ -107,23 +122,31 @@
       <div class="mx-5">Industry</div>
     </div>
     <!-- availableProjects' list goes here -->
-    <div v-if="availableProjects.length != 0 && user != null">
+    <div v-if="getProjects">
       <ProjectBanner
-        v-for="project in availableProjects"
+        v-for="project in getProjects"
         :key="project.projectId"
         :project="project"
         :user="user"
       />
+    </div>
+    <div
+      class="h5 text-center py-5"
+      v-if="getProjects ? getProjects.length == 0 : false"
+    >
+      No result.
     </div>
   </div>
 </template>
 
 <script>
 import ProjectBanner from "../components/ProjectBanner";
+import { mapState } from "vuex";
 import {
   getAvailableProjects,
   getUserProjects,
   getUser,
+  getRelatedProjectByUser,
 } from "../utils/apiService";
 
 export default {
@@ -132,26 +155,51 @@ export default {
   data() {
     return {
       userProjects: [],
-      availableProjects: [],
-      user: null,
+      availableProjects: undefined,
+      user: undefined,
       search: null,
     };
   },
   async mounted() {
-    this.availableProjects = await getAvailableProjects();
-    this.userProjects = await getUserProjects();
-    this.user = await getUser();
+    if (this.isAuthorized) {
+      this.availableProjects = await getRelatedProjectByUser();
+
+      this.user = await getUser();
+      this.userProjects = [];
+      this.user.userProjects.map(async (e) => {
+        this.userProjects.push(await getUserProjects(e));
+      });
+      console.log("userprojects");
+      console.log(this.userProjects);
+      console.log(this.user);
+    } else {
+      this.availableProjects = await getAvailableProjects();
+    }
+    console.log(this.availableProjects);
   },
   methods: {
-    filterByIndustry: function (event) {
-      alert(event.target.innerText);
+    filterByIndustry: async function (event) {
+      this.availableProjects = await getAvailableProjects(
+        event.target.innerText,
+        ""
+      );
     },
-    searchButton: function () {
-      alert(this.search);
+    searchButton: async function () {
+      this.availableProjects = await getAvailableProjects("", this.search);
     },
-    filterByStatus: function (event) {
-      alert(event.target.innerText);
+    filterByStatus: async function (event) {
+      this.availableProjects = await getAvailableProjects(
+        "",
+        "",
+        event.target.innerText
+      );
     },
+  },
+  computed: {
+    getProjects() {
+      return this.availableProjects;
+    },
+    ...mapState(["isAuthorized"]),
   },
 };
 </script>

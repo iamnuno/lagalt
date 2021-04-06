@@ -1,16 +1,16 @@
 <template>
   <div class="card" @click="toProjectDetails">
-    <div class="row">
+    <div class="row flex-nowrap justify-content-center align-items-center">
       <div class="initials">{{ projectInitials }}</div>
       <div class="name">{{ project.projectTitle }}</div>
       <div class="tags">
         <span v-for="tag in project.projectTags" :key="tag">{{ tag }}</span>
       </div>
-      <div class="skills">
+      <div class="skills" v-if="user != undefined">
         <span
           v-for="skill in project.projectSkills"
           :key="skill"
-          :class="{ match_skill: user.userSkills.includes(skill) }"
+          :class="{ match_skill: skillMatch(skill) }"
           >{{ skill }}</span
         >
       </div>
@@ -22,7 +22,6 @@
 <script>
 export default {
   props: ["project", "user"],
-
   computed: {
     projectInitials() {
       let initials = "";
@@ -44,6 +43,11 @@ export default {
         name: "project",
         params: { id },
       });
+    },
+    skillMatch(skill) {
+      return this.$store.getters.isAnonymous
+        ? false
+        : this.user.userSkills.includes(skill);
     },
   },
 };
@@ -77,8 +81,8 @@ export default {
 
 .initials {
   margin: 1em;
-  width: 3em;
-  height: 3em;
+  min-width: 3em;
+  min-height: 3em;
   background-color: #d1495b;
   border-radius: 50%;
   display: flex;

@@ -36,7 +36,9 @@
 </template>
 
 <script>
+import { newApplication } from "../utils/apiService";
 export default {
+  props: ["projectId"],
   name: "new-application-modal",
   data() {
     return {
@@ -66,8 +68,7 @@ export default {
       if (!this.checkFormValidity()) {
         return;
       }
-      // TODO: SAVE THE NEW CARD
-      console.log("motivation: " + this.motivation);
+      newApplication(this.motivation, this.projectId);
       // Hide the modal manually
       this.$nextTick(() => {
         this.$bvModal.hide("modal-new-application");

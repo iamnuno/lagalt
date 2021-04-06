@@ -29,8 +29,6 @@ async function login(username, password) {
                 console.log(errorCode + "  " + errorMessage);
                 throw "error"
             });
-        store.commit('updateJWT', await getJwt());
-
         return true;
     } catch (err) {
         console.error(err);
@@ -49,7 +47,6 @@ async function register(username, email, password) {
                 console.log(errorCode + "  " + errorMessage);
                 throw "error"
             });
-        store.commit('updateJWT', await getJwt());
 
         let id = await newUser(username, email);
 
@@ -75,6 +72,8 @@ async function register(username, email, password) {
 async function logout() {
     try {
         await firebase.auth().signOut();
+        store.commit("updateJWT", null)
+        store.commit("signout")
         return true;
     } catch (error) {
         return false;
@@ -82,16 +81,20 @@ async function logout() {
 }
 
 async function getJwt() {
-    return firebase.auth()
-        .currentUser.getIdToken(true)
-        .then(function (idToken) {
-            return idToken;
-        })
-        .catch(function (error) {
-            console.error(error);
-            console.error("user is not logged in yet!");
-            return null;
-        });
+    const user = firebase.auth().currentUser;
+
+    if (user)
+        return firebase.auth()
+            .currentUser.getIdToken(true)
+            .then(function (idToken) {
+                return idToken;
+            })
+            .catch(function (error) {
+                console.error(error);
+                console.error("user is not logged in yet!");
+                return null;
+            });
+    return null;
 }
 
 // eslint-disable-next-line no-async-promise-executor
@@ -103,14 +106,16 @@ const onAuthStateChangedPromise = new Promise(async (resolve, reject) => {
             userId = user.uid;
             await db.collection("users").doc(userId).get().then((doc) => {
                 userId = doc.data().id;
+                store.commit('signin');
+                store.commit('setUserId', userId);
             });
-            store.commit('signin');
-            store.commit('setUserId', userId);
             store.commit("setUser", await getUser())
+
         } else {
             store.commit('signout');
-            store.commit('setUserId', userId);
+            store.commit('setUserId', null);
             store.commit("setUser", { userName: "unknown" })
+            store.commit("updateJWT", null)
         }
         resolve(userId)
     }, err => {

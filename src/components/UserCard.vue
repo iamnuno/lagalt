@@ -19,10 +19,6 @@
 export default {
   name: "user-card",
   props: ["name"],
-  data() {
-    return {};
-  },
-  methods: {},
 };
 </script>
 

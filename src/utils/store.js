@@ -22,11 +22,13 @@ export const store = new Vuex.Store({
         },
         jwt: state => {
             return state.jwt;
-        }
+        },
     },
     mutations: {
         signout: state => {
             state.isAuthorized = false;
+            state.user = "unknown";
+            state.jwt = null;
         },
         signin: state => {
             state.isAuthorized = true;
@@ -39,7 +41,7 @@ export const store = new Vuex.Store({
         },
         updateJWT: (state, payload) => {
             state.jwt = payload;
-        }
+        },
     },
 
 })
