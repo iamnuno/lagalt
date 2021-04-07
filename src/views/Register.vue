@@ -55,7 +55,10 @@ export default {
   methods: {
     async register() {
       await firebase.register(this.username, this.email, this.password);
-      this.$router.push({ name: "home" });
+      // TODO: REPLACE WITH A BETTER SOLUTION
+      setTimeout(() => {
+        this.$router.push({ name: "home" });
+      }, 250);
     },
   },
   computed: {

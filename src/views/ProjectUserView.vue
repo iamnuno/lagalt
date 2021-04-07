@@ -109,24 +109,9 @@
       </div>
       <div class="breakline mx-2" />
       <!-- COLLABORATORS LIST -->
-      <div class="d-flex flex-row">
-        <div
-          v-if="project.projectUsers !== undefined"
-          id="collaborators"
-          class="bg-white shadow rounded d-flex flex-column w-25 m-2"
-        >
-          <div class="h4 text-center p-1 text-truncate mb-1">Collaborators</div>
-          <div class="breakline mx-2" />
-          <div class="scorllable scrollbar m-2 rounded">
-            <UserCard
-              v-for="collaborator in collaborators"
-              :key="collaborator.userId"
-              :name="collaborator.userName"
-            />
-          </div>
-        </div>
+      <div class="d-flex flex-lg-row flex-column">
         <!-- PHOTOS -->
-        <div class="flex-grow-1 d-flex flex-column">
+        <div class="flex-grow-1 d-flex flex-column flex-grow-1">
           <div id="photo-container" class="bg-light shadow rounded m-2">
             <div class="h4 p-1 text-center">Gallery</div>
             <div class="breakline mx-2 mb-2" />
@@ -143,6 +128,21 @@
             >
               There are no images yet.
             </div>
+          </div>
+        </div>
+        <div
+          v-if="project.projectUsers !== undefined"
+          id="collaborators"
+          class="bg-white shadow rounded d-flex flex-column w-50 m-2"
+        >
+          <div class="h4 text-center p-1 text-truncate mb-1">Collaborators</div>
+          <div class="breakline mx-2" />
+          <div class="scorllable scrollbar m-2 rounded">
+            <UserCard
+              v-for="collaborator in collaborators"
+              :key="collaborator.userId"
+              :name="collaborator.userName"
+            />
           </div>
         </div>
       </div>
