@@ -27,7 +27,7 @@
       >
         {{ project.projectTitle }}
       </div>
-      <div class="img" />
+      <div ref="photo" class="img" />
       <div id="status" class="d-flex flex-row justify-content-between p-2 mx-4">
         <div
           class="in-progress no-pointer text-white rounded shadow p-1 text-capitalize"
@@ -220,6 +220,8 @@ export default {
     console.log(user);
     this.isAdmin = user.admin;
     this.commits = await getGitCommit(this.project.externalUrl);
+    this.$refs.photo.style.background =
+      "url(" + this.project.projectBackgroundPhoto + ")";
   },
   computed: {
     isAnnouncements() {
@@ -274,7 +276,6 @@ export default {
 .img {
   height: 200px;
   background-size: cover;
-  background-image: url("https://images.unsplash.com/photo-1516259762381-22954d7d3ad2?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1366&q=80");
   background-repeat: no-repeat;
 }
 .in-progress {
