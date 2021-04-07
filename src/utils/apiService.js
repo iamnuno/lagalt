@@ -151,9 +151,9 @@ async function getUsersProjectsById(userId, projectId) {
 
 
 
-async function getGitCommit() {
-
-    return false
+async function getGitCommit(url) {
+    console.log(url)
+    return axios.get(url).then((res) => { return res.data }).catch(() => { return [] })
 }
 
 async function newApplication(motivation, projectId) {
@@ -166,6 +166,23 @@ async function newApplication(motivation, projectId) {
                 projectId: projectId
             },
             motivation: motivation
+        }, await config())
+        .then((response) => {
+            return response.data;
+        })
+        .catch((err) => alert(err));
+}
+
+async function newProjectCard(title, text, projectId) {
+    const date = new Date().toJSON();
+    return await axios
+        .post(BASE_API_URL + API_URL + '/project-cards', {
+            projectCardTitle: title,
+            projectCardText: text,
+            projectCardCreatedAt: date,
+            project: {
+                projectId: projectId
+            }
         }, await config())
         .then((response) => {
             return response.data;
@@ -188,9 +205,32 @@ async function isAdmin(projectId) {
         )
 }
 
+async function getAnnouncements(url) {
+    return await axios
+        .get(BASE_API_URL + url, await config())
+        .then((response) => {
+
+            return response.data;
+        })
+        .catch((err) => {
+            if (err.response.status == 404)
+                return false;
+        }
+        )
+}
+
 async function getCollaborators(userUrl) {
     return await axios
         .get(BASE_API_URL + userUrl, await config())
+        .then((response) => {
+            return response.data;
+        })
+        .catch((err) => alert(err));
+}
+
+async function getProjectCards(url) {
+    return await axios
+        .get(BASE_API_URL + url, await config())
         .then((response) => {
             return response.data;
         })
@@ -210,4 +250,7 @@ export {
     getRelatedProjectByUser,
     isAdmin,
     newApplication,
+    getAnnouncements,
+    newProjectCard,
+    getProjectCards,
 };

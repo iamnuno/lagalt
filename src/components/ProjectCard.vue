@@ -17,8 +17,12 @@ export default {
     return {
       title: this.data.title,
       text: this.data.text,
-      date: this.data.date,
     };
+  },
+  computed: {
+    date() {
+      return this.data.date.substring(0, 10);
+    },
   },
 };
 </script>

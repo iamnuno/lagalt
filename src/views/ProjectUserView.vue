@@ -9,9 +9,13 @@
       <!-- card -->
       <div>
         <ProjectCard
-          v-for="announcement in project.announcements"
-          :key="announcement.id"
-          :data="announcement"
+          v-for="announcement in announcements"
+          :key="announcement.announcementId"
+          :data="{
+            title: announcement.announcementTitle,
+            text: announcement.announcementText,
+            date: announcement.announcementCreatedAt,
+          }"
         />
       </div>
     </div>
@@ -83,12 +87,19 @@
       <div class="h3 mx-2 mb-1">Messages</div>
       <div id="projectcards" class="d-flex flex-row flex-wrap">
         <ProjectCard
-          v-for="projectCard in project.projectCards"
-          :key="projectCard.id"
-          :data="projectCard"
+          v-for="projectCard in cards"
+          :key="projectCard.projectCardId"
+          :data="{
+            title: projectCard.projectCardTitle,
+            text: projectCard.projectCardText,
+            date: projectCard.projectCardCreatedAt,
+          }"
         />
         <div class="m-2">
-          <NewProjectCardModal />
+          <NewProjectCardModal
+            :projectId="id"
+            @updateProjectCards="updateProjectCards"
+          />
         </div>
       </div>
       <div class="breakline mx-2" />
@@ -121,12 +132,21 @@
               :photo="photo"
               class="m-2"
             />
+            <div
+              class="text-center p-3 h5"
+              v-if="project.projectPhotos ? project.projectPhotos == 0 : false"
+            >
+              There are no images yet.
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="color w-25 d-flex flex-column align-content-center">
+    <div
+      class="color w-25 d-flex flex-column align-content-center"
+      v-if="commits.length != 0"
+    >
       <div class="py-4 h3 text-center">Git repository</div>
       <div v-if="isCommits">
         <CommitCard
@@ -151,6 +171,8 @@ import {
   getGitCommit,
   getCollaborators,
   isAdmin,
+  getAnnouncements,
+  getProjectCards,
 } from "../utils/apiService";
 
 export default {
@@ -161,6 +183,8 @@ export default {
       project: {},
       commits: [],
       collaborators: [],
+      announcements: [],
+      cards: [],
       isAdmin: false,
     };
   },
@@ -172,12 +196,19 @@ export default {
     UserCard,
     ImageModal,
   },
-  created: async function () {
+  mounted: async function () {
     this.project = await getProjectById(this.id);
     console.log(this.project);
     this.project.projectUsers.map(async (e) => {
       this.collaborators.push(await getCollaborators(e));
     });
+    this.project.announcements.map(async (e) => {
+      this.announcements.push(await getAnnouncements(e));
+    });
+    this.project.projectCards.map(async (e) => {
+      this.cards.push(await getProjectCards(e));
+    });
+    console.log(this.cards);
     const user = await isAdmin(this.id);
     console.log(user);
     this.isAdmin = user.admin;
@@ -208,6 +239,9 @@ export default {
     toAdminView() {
       const id = this.id;
       this.$$route.push({ name: "admin", props: id });
+    },
+    updateProjectCards(card) {
+      this.cards.push(card);
     },
   },
 };

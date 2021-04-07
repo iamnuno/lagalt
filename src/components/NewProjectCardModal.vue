@@ -45,7 +45,10 @@
 </template>
 
 <script>
+import { newProjectCard } from "../utils/apiService";
+
 export default {
+  props: ["projectId"],
   data() {
     return {
       message: "",
@@ -89,13 +92,18 @@ export default {
       // Trigger submit handler
       this.handleSubmit();
     },
-    handleSubmit() {
+    async handleSubmit() {
       // Exit when the form isn't valid
       if (!this.checkFormValidity()) {
         return;
       }
-      // TODO: SAVE THE NEW CARD
-      console.log("title: " + this.title + " message: " + this.message);
+      const card = await newProjectCard(
+        this.title,
+        this.message,
+        this.projectId
+      );
+
+      this.$emit("updateProjectCards", card);
       // Hide the modal manually
       this.$nextTick(() => {
         this.$bvModal.hide("modal-prevent-closing");
