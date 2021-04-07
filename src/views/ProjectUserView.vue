@@ -34,8 +34,13 @@
         >
           {{ status }}
         </div>
+        <div
+          class="mx-1 in-progress no-pointer text-white rounded shadow p-1 text-capitalize"
+        >
+          {{ progress }}
+        </div>
         <!-- SPACE -->
-        <div class="flex-grow-1" />
+        <div class="flex-grow-1" v-if="isAuthorized" />
         <NewApplicationModal v-if="!isAdmin" :projectId="this.id" />
         <router-link
           v-if="isAdmin"
@@ -166,6 +171,8 @@ import NewApplicationModal from "../components/NewApplicationModal.vue";
 import NewProjectCardModal from "../components/NewProjectCardModal.vue";
 import ProjectCard from "../components/ProjectCard";
 import UserCard from "../components/UserCard.vue";
+import { mapState } from "vuex";
+
 import {
   getProjectById,
   getGitCommit,
@@ -228,12 +235,20 @@ export default {
         return "";
       }
     },
+    progress() {
+      if (this.project.projectProgress != undefined) {
+        return this.project.projectProgress.replaceAll("_", " ").toLowerCase();
+      } else {
+        return "";
+      }
+    },
     showAnnouncements() {
       if (this.project.announcements != undefined) {
         if (this.project.announcements.length != 0) return true;
       }
       return false;
     },
+    ...mapState(["isAuthorized"]),
   },
   methods: {
     toAdminView() {
