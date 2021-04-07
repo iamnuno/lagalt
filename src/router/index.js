@@ -9,7 +9,8 @@ import Register from '../views/Register';
 import Login from '../views/Login';
 import { onAuthStateInit } from '../utils/firebase';
 import { store } from '../utils/store';
-
+import axios from 'axios';
+import { BASE_API_URL, API_URL } from '../constants/constants';
 
 Vue.use(VueRouter);
 const routes = [
@@ -32,12 +33,38 @@ const router = new VueRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-    await onAuthStateInit()
-    if ((to.name === 'login' || to.name === 'register') && await store.getters.isAuthorized) {
-        next({ name: 'home' })
+    await onAuthStateInit();
+    if (
+        (to.name === 'login' || to.name === 'register') &&
+        (await store.getters.isAuthorized)
+    ) {
+        next({ name: 'home' });
+    } else if (to.name === 'ProjectAdminView') {
+        let id = to.params.id;
+        axios
+            .get(
+                BASE_API_URL +
+                    API_URL +
+                    '/users-projects/' +
+                    store.getters.userId +
+                    '/' +
+                    id,
+                {
+                    headers: {
+                        Authorization: 'Bearer ' + store.getters.jwt,
+                    },
+                }
+            )
+            .then((response) => {
+                if (response.data.admin) {
+                    next();
+                } else {
+                    alert('You are not authorized');
+                }
+            });
     } else {
-        next()
+        next();
     }
-})
+});
 
 export { router };
