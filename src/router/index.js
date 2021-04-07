@@ -60,6 +60,7 @@ router.beforeEach(async (to, from, next) => {
                     next();
                 } else {
                     alert('You are not authorized');
+                    next({ name: 'home' });
                 }
             });
     } else {
