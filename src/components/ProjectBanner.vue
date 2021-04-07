@@ -20,6 +20,8 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   props: ["project", "user"],
   computed: {
@@ -35,14 +37,17 @@ export default {
     industry() {
       return this.project.projectType.replaceAll("_", " ").toLowerCase();
     },
+    ...mapState(["isAuthorized"]),
   },
   methods: {
     toProjectDetails() {
-      const id = this.project.projectId;
-      this.$router.push({
-        name: "project",
-        params: { id },
-      });
+      if (this.isAuthorized) {
+        const id = this.project.projectId;
+        this.$router.push({
+          name: "project",
+          params: { id },
+        });
+      }
     },
     skillMatch(skill) {
       return this.$store.getters.isAnonymous
