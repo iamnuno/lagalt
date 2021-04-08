@@ -533,14 +533,19 @@ export default {
     },
   },
   mounted() {
+    // fetch project details for displaying
     this.getProjectDetails();
 
+    // add additional hasSkill boolean
+    // it will keep track of which skills needs to be added to the projectSkills array
     this.availableSkills = this.availableSkills.map((x) => ({
       name: x.name,
       industry: x.industry,
       hasSkill: false,
     }));
 
+    // add additional hasTag boolean
+    // it will keep track of which tags needs to be added to the projectTags array
     this.availableTags = this.availableTags.map((x) => ({
       name: x.name,
       industry: x.industry,
@@ -548,6 +553,7 @@ export default {
     }));
   },
   methods: {
+    // using custom validation instead of Vuelidator
     addAnnouncement() {
       if (this.newAnnouncement.title === "") {
         this.newAnnouncement.titleError = true;
@@ -564,7 +570,7 @@ export default {
         this.announcements.push({
           title: this.newAnnouncement.title,
           text: this.newAnnouncement.text,
-          isCreate: true,
+          isCreate: true, // used to track which announcements are new
         });
       }
     },
@@ -576,7 +582,7 @@ export default {
         }
       });
     },
-    // set an announcement to be deleted on update
+    // set an announcement to be deleted on project update
     deleteAnnouncement(announcementId) {
       this.announcements.forEach((announcement) => {
         if (announcement.id === announcementId) {
@@ -594,7 +600,7 @@ export default {
         }
       });
     },
-    // set a message to be deleted on update
+    // set a message to be deleted on project update
     deleteMessage(messageId) {
       this.messages.forEach((msg) => {
         if (msg.id === messageId) {
@@ -605,6 +611,7 @@ export default {
       });
     },
     updateProject() {
+      // if it passes Vuelidator validation
       if (!this.$v.$invalid) {
         axios
           .put(
@@ -626,10 +633,9 @@ export default {
               },
             }
           )
-          .then((res) => {
-            console.log(res);
-            // update / delete messages
+          .then(() => {
             this.messages.forEach((message) => {
+              // delete messages
               if (message.isDelete === true) {
                 axios.delete(API_URL + `/project-cards/${message.id}`);
                 // do not show the message anymore
@@ -637,6 +643,7 @@ export default {
                   (msg) => msg.id !== message.id
                 );
               } else {
+                // update messages
                 axios
                   .put(
                     BASE_API_URL + API_URL + `/project-cards/${message.id}`,
@@ -652,9 +659,7 @@ export default {
                       },
                     }
                   )
-                  .then((res) => {
-                    console.log(res);
-                  })
+                  .then(() => {})
                   .catch((error) => console.log(error));
               }
             });
@@ -693,9 +698,7 @@ export default {
                       },
                     }
                   )
-                  .then((res) => {
-                    console.log(res);
-                  })
+                  .then(() => {})
                   .catch((error) => console.log(error));
               } else {
                 // update announcement
@@ -716,9 +719,7 @@ export default {
                       },
                     }
                   )
-                  .then((res) => {
-                    console.log(res);
-                  })
+                  .then(() => {})
                   .catch((error) => console.log(error));
               }
 
@@ -739,7 +740,7 @@ export default {
                       },
                     }
                   )
-                  .then((res) => console.log(res))
+                  .then(() => {})
                   .catch((error) => console.log(error));
               });
             });
