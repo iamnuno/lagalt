@@ -2,7 +2,7 @@
   <div class="d-flex flex-row flex-grow-1">
     <!-- announcements -->
     <div
-      v-if="showAnnouncements"
+      v-if="showAnnouncements && isCollaborator"
       class="color w-25 d-flex flex-column align-content-center"
     >
       <div class="py-4 h3 text-center mx-2 text-truncate">Announcements</div>
@@ -89,22 +89,24 @@
       </div>
       <div class="breakline mx-2" />
       <!-- PROJECT CARDS -->
-      <div class="h3 mx-2 mb-1">Messages</div>
-      <div id="projectcards" class="d-flex flex-row flex-wrap">
-        <ProjectCard
-          v-for="projectCard in cards"
-          :key="projectCard.projectCardId"
-          :data="{
-            title: projectCard.projectCardTitle,
-            text: projectCard.projectCardText,
-            date: projectCard.projectCardCreatedAt,
-          }"
-        />
-        <div class="m-2">
-          <NewProjectCardModal
-            :projectId="id"
-            @updateProjectCards="updateProjectCards"
+      <div v-if="isCollaborator">
+        <div class="h3 mx-2 mb-1">Messages</div>
+        <div id="projectcards" class="d-flex flex-row flex-wrap">
+          <ProjectCard
+            v-for="projectCard in cards"
+            :key="projectCard.projectCardId"
+            :data="{
+              title: projectCard.projectCardTitle,
+              text: projectCard.projectCardText,
+              date: projectCard.projectCardCreatedAt,
+            }"
           />
+          <div class="m-2">
+            <NewProjectCardModal
+              :projectId="id"
+              @updateProjectCards="updateProjectCards"
+            />
+          </div>
         </div>
       </div>
       <div class="breakline mx-2" />
@@ -193,6 +195,7 @@ export default {
       announcements: [],
       cards: [],
       isAdmin: false,
+      isCollaborator: false,
     };
   },
   components: {
@@ -205,7 +208,6 @@ export default {
   },
   mounted: async function () {
     this.project = await getProjectById(this.id);
-    console.log(this.project);
     this.project.projectUsers.map(async (e) => {
       this.collaborators.push(await getCollaborators(e));
     });
@@ -215,10 +217,13 @@ export default {
     this.project.projectCards.map(async (e) => {
       this.cards.push(await getProjectCards(e));
     });
-    console.log(this.cards);
+
     const user = await isAdmin(this.id);
-    console.log(user);
-    this.isAdmin = user.admin;
+    if (user) {
+      this.isAdmin = user.admin;
+      this.isCollaborator = user.approvalStatus == "APPROVED" ? true : false;
+    }
+
     this.commits = await getGitCommit(this.project.externalUrl);
     this.$refs.photo.style.background =
       "url(" + this.project.projectBackgroundPhoto + ")";
@@ -298,7 +303,7 @@ export default {
 }
 
 .scorllable {
-  height: 300px;
+  max-height: 300px;
   overflow-y: scroll;
 }
 

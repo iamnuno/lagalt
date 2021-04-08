@@ -195,7 +195,6 @@ async function isAdmin(projectId) {
         .get(BASE_API_URL + API_URL +
             "/users-projects/" + store.getters.userId + "/" + projectId, await config())
         .then((response) => {
-
             return response.data;
         })
         .catch((err) => {

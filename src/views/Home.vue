@@ -172,8 +172,6 @@ export default {
     } else {
       this.availableProjects = await getAvailableProjects();
     }
-
-    console.log(this.availableProjects);
   },
   methods: {
     filterByIndustry: async function (event) {
