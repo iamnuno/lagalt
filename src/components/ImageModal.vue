@@ -5,6 +5,7 @@
       :src="photo"
       alt="picture"
       class="rounded shadow"
+      @error="imageLoadError(photo)"
       @click="showModal()"
     />
     <!-- TODO: FIX IMAGE MODAL -->
@@ -18,6 +19,9 @@ export default {
   props: ["photo"],
   methods: {
     showModal() {},
+    imageLoadError(photo) {
+      photo.src = "https://bitsofco.de/content/images/2018/12/broken-1.png";
+    },
   },
 };
 </script>

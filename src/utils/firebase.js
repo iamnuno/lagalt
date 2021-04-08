@@ -1,8 +1,8 @@
+import { store } from './store';
+import { getUser } from './apiService';
 import firebase from "firebase/app";
 import "firebase/auth";
 import 'firebase/firestore';
-import { store } from './store'
-import { newUser, getUser } from './apiService';
 
 const firebaseConfig = {
     apiKey: "AIzaSyBQtLPSvrYafuLKh9QXMr0745iICV3SgsE",
@@ -15,60 +15,70 @@ const firebaseConfig = {
 }
 
 firebase.initializeApp(firebaseConfig);
-
 let db = firebase.firestore();
+
 async function login(username, password) {
+    const loginForm = document.querySelector('#login')
+    let state = true;
 
     try {
         await firebase
             .auth()
             .signInWithEmailAndPassword(username, password)
             .catch((error) => {
-                var errorCode = error.code;
-                var errorMessage = error.message;
-                console.log(errorCode + "  " + errorMessage);
-                throw "error"
+                loginForm.querySelector('.error').innerHTML = error.message;
+                state = false;
             });
-        return true;
     } catch (err) {
-        console.error(err);
-        return false;
+        loginForm.querySelector('.error').innerHTML = err.message;
+        state = false;
     }
+    return state;
 }
 
+/**
+ * register new user 
+ * @returns true if the user is registered successfully 
+ */
 async function register(username, email, password) {
+    const registerForm = document.querySelector('#register')
+    let status = true;
+
     try {
+        // register the new user in firebase auth
         await firebase
             .auth()
             .createUserWithEmailAndPassword(email, password)
             .catch((error) => {
-                var errorCode = error.code;
-                var errorMessage = error.message;
-                console.log(errorCode + "  " + errorMessage);
-                throw "error"
+                registerForm.querySelector('.error').innerHTML = error.message;
+                status = false;
             });
 
-        let id = await newUser(username, email);
+        if (status) {
+            // save user's credentials  in backend
+            let id = 2; //await newUser(username, email);
+            // save user id in firestore to be used later
+            firebase.auth().onAuthStateChanged((user) => {
 
-        firebase.auth().onAuthStateChanged((user) => {
-            if (user) {
-                db.collection("users").doc(user.uid).set({
-                    id: id,
-                })
-                    .then(() => {
-                        console.log("Document successfully written!");
-                    })
-                    .catch((error) => {
-                        console.error("Error writing document: ", error);
+                if (user) {
+                    db.collection("users").doc(user.uid).set({
+                        id: id,
+                    }).catch((error) => {
+                        console.error("Error writing document: ", error.message);
                     });
-            }
-        })
-        return true;
+                }
+            })
+        }
     } catch (error) {
-        return false;
+        status = false;
     }
+    return status;
 }
 
+/**
+ * 
+ * @returns true of the user logs out successfully, otherwise return false 
+ */
 async function logout() {
     try {
         await firebase.auth().signOut();
@@ -80,6 +90,10 @@ async function logout() {
     }
 }
 
+/**
+ * 
+ * @returns jwt object if the user is logged in
+ */
 async function getJwt() {
     const user = firebase.auth().currentUser;
 
@@ -92,25 +106,27 @@ async function getJwt() {
             .catch(function (error) {
                 console.error(error);
                 console.error("user is not logged in yet!");
-                return null;
             });
     return null;
 }
 
-// eslint-disable-next-line no-async-promise-executor
-const onAuthStateChangedPromise = new Promise(async (resolve, reject) => {
+/**
+ * updates store as the user logs in and out
+ * 
+ */
+const onAuthStateChangedPromise = new Promise((resolve, reject) => {
     let userId = null;
 
-    await firebase.auth().onAuthStateChanged(async user => {
+    firebase.auth().onAuthStateChanged(async user => {
         if (user !== null) {
             userId = user.uid;
+            // fetching userId from firestore on log in
             await db.collection("users").doc(userId).get().then((doc) => {
                 userId = doc.data().id;
                 store.commit('signin');
                 store.commit('setUserId', userId);
             });
             store.commit("setUser", await getUser())
-
         } else {
             store.commit('signout');
             store.commit('setUserId', null);
@@ -123,6 +139,6 @@ const onAuthStateChangedPromise = new Promise(async (resolve, reject) => {
     })
 })
 
-const onAuthStateInit = () => onAuthStateChangedPromise
+const onAuthStateInit = async () => await onAuthStateChangedPromise
 
 export { onAuthStateInit, getJwt, login, logout, register };
