@@ -3,6 +3,7 @@
     class="flex-grow-1 d-flex flex-column justify-content-center align-items-center"
   >
     <div
+      id="login"
       class="shadow d-flex flex-column justify-content-center align-items-center w-50 py-4 rounded"
     >
       <div class="h2 text-center">Login</div>
@@ -29,9 +30,7 @@
           Login
         </button>
       </div>
-      <div v-if="error" class="text-center text-danger f-w-400">
-        Failed to log in. Check your passowrd and email.
-      </div>
+      <div class="error text-center text-danger f-w-400"></div>
       <router-link to="register" class="text-info text-center pointer">
         dont have an account? register here.
       </router-link>
@@ -48,7 +47,6 @@ export default {
     return {
       email: "",
       password: "",
-      error: false,
     };
   },
   methods: {
@@ -59,8 +57,6 @@ export default {
         setTimeout(() => {
           this.$router.push({ name: "home" });
         }, 250);
-      } else {
-        this.error = true;
       }
     },
   },
@@ -77,6 +73,3 @@ export default {
   },
 };
 </script>
-
-<style>
-</style>+

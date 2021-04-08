@@ -169,12 +169,10 @@ export default {
       this.user.userProjects.map(async (e) => {
         this.userProjects.push(await getUserProjects(e));
       });
-      console.log("userprojects");
-      console.log(this.userProjects);
-      console.log(this.user);
     } else {
       this.availableProjects = await getAvailableProjects();
     }
+
     console.log(this.availableProjects);
   },
   methods: {
@@ -188,11 +186,16 @@ export default {
       this.availableProjects = await getAvailableProjects("", this.search);
     },
     filterByStatus: async function (event) {
-      this.availableProjects = await getAvailableProjects(
-        "",
-        "",
-        event.target.innerText
-      );
+      console.log("hi:" + event.target.innerText);
+      if (event.target.innerText === "") {
+        this.availableProjects = await getAvailableProjects();
+      } else {
+        this.availableProjects = await getAvailableProjects(
+          "",
+          "",
+          event.target.innerText
+        );
+      }
     },
   },
   computed: {

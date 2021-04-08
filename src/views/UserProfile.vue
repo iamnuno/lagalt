@@ -16,7 +16,7 @@
           </div>
           <!-- User description -->
           <h5 class="f-w-600">{{ name }}</h5>
-          <textarea
+          <texrea
             v-model="description"
             :disabled="!isEditing"
             class="description"

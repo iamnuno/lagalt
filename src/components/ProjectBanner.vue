@@ -6,7 +6,7 @@
       <div class="tags">
         <span v-for="tag in project.projectTags" :key="tag">{{ tag }}</span>
       </div>
-      <div class="skills" v-if="user != undefined">
+      <div class="skills">
         <span
           v-for="skill in project.projectSkills"
           :key="skill"
@@ -50,9 +50,9 @@ export default {
       }
     },
     skillMatch(skill) {
-      return this.$store.getters.isAnonymous
-        ? false
-        : this.user.userSkills.includes(skill);
+      return this.user != undefined
+        ? this.user.userSkills.includes(skill)
+        : false;
     },
   },
 };
