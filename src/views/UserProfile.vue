@@ -16,7 +16,7 @@
           </div>
           <!-- User description -->
           <h5 class="f-w-600">{{ name }}</h5>
-          <texrea
+          <textarea
             v-model="description"
             :disabled="!isEditing"
             class="description"
@@ -165,6 +165,10 @@
         </div>
       </div>
     </div>
+    <!-- modal -->
+    <b-modal ok-only id="alert" :title="alertTitle">
+      <p class="my-4">{{ alertText }}</p>
+    </b-modal>
   </div>
 </template>
 
@@ -194,6 +198,8 @@ export default {
       userSkills: [],
       userProjects: [],
       projectApplications: [],
+      alertText: "",
+      alertTitle: "",
     };
   },
   mounted() {
@@ -212,7 +218,6 @@ export default {
         hasSkill: false,
       }));
     },
-    //TODO: implement real user verification
     async getUserInformation() {
       let user = await getUser();
 
@@ -240,7 +245,6 @@ export default {
 
         let usersProjects = await getUsersProjectsById(this.userId, projectId);
 
-        console.log(usersProjects);
         let projectTitle = "";
         let status = usersProjects.approvalStatus;
         let isAdmin = usersProjects.admin;
@@ -272,7 +276,17 @@ export default {
         userSkills: this.userSkills,
       };
 
-      await updateUser(user);
+      let id = await updateUser(user);
+
+      if (id === this.userId) {
+        this.alertTitle = "Confirmation";
+        this.alertText = "Profile updated";
+        this.$bvModal.show("alert");
+      } else {
+        this.alertTitle = "Error";
+        this.alertText = "Profile not updated";
+        this.$bvModal.show("alert");
+      }
     },
     updateSkills(e) {
       this.availableSkills.forEach((skill) => {
