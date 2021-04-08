@@ -93,7 +93,6 @@ async function getRelatedProjectByUser() {
             await config()
         )
         .then((response) => {
-            console.log(response.data);
             return response.data;
         })
         .catch((err) => alert(err));
