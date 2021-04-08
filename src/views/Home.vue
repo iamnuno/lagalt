@@ -167,7 +167,10 @@ export default {
       this.user = await getUser();
       this.userProjects = [];
       this.user.userProjects.map(async (e) => {
-        this.userProjects.push(await getUserProjects(e));
+        const project = await getUserProjects(e);
+        if (project.active) {
+          this.userProjects.push(project);
+        }
       });
     } else {
       this.availableProjects = await getAvailableProjects();
