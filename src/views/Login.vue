@@ -3,23 +3,28 @@
     class="flex-grow-1 d-flex flex-column justify-content-center align-items-center"
   >
     <div
-      id="login"
       class="shadow d-flex flex-column justify-content-center align-items-center w-50 py-4 rounded"
     >
       <div class="h2 text-center">Login</div>
-      <div class="d-flex flex-column overflow-hidden">
+      <form
+        @submit.prevent
+        id="login"
+        class="d-flex flex-column overflow-hidden"
+      >
         <input
           v-model="email"
           class="my-2 rounded form-control"
           placeholder="Email"
           type="text"
+          autocomplete="on"
           required
         />
         <input
-          class="my-2 rounded form-control"
+          class="my-2 rounded form-control cc-csc"
           v-model="password"
           placeholder="Password"
           type="password"
+          autocomplete="on"
           required
         />
         <button
@@ -29,8 +34,8 @@
         >
           Login
         </button>
-      </div>
-      <div class="error text-center text-danger f-w-400"></div>
+        <div class="error text-center text-danger f-w-400"></div>
+      </form>
       <router-link to="register" class="text-info text-center pointer">
         dont have an account? register here.
       </router-link>
