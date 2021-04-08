@@ -218,6 +218,10 @@
         </div>
       </form>
     </div>
+    <!-- modal -->
+    <b-modal ok-only id="alert" :title="alertTitle">
+      <p class="my-4">{{ alertText }}</p>
+    </b-modal>
   </div>
 </template>
 
@@ -250,6 +254,8 @@ export default {
       backgroundUrl: "",
       photos: [],
       newPhotoUrl: "",
+      alertText: "",
+      alertTitle: "",
     };
   },
   // vuelidator
@@ -292,30 +298,20 @@ export default {
         };
 
         let res = await newProject(project);
-        console.log(res);
 
-        // axios
-        //   .post(API_URL + "/projects/2", {
-        //     projectTitle: this.title,
-        //     projectDescription: this.description,
-        //     projectProgress: this.status.toUpperCase().replace(" ", "_"),
-        //     projectType: this.type.toUpperCase().replace(" ", "_"),
-        //     projectSkills: this.projectSkills,
-        //     projectTags: this.projectTags,
-        //     externalUrl: this.externalUrl,
-        //     projectBackgroundPhoto: this.backgroundUrl,
-        //     projectPhotos: this.photos,
-        //   })
-        //   .then((res) => {
-        //     console.log(res);
-        //     alert("Project created successfully");
-        //   })
-        //   .catch((error) => {
-        //     console.log(error);
-        //     alert("Project not created");
-        //   });
+        if (res) {
+          this.alertTitle = "Confirmation";
+          this.alertText = "Project created";
+          this.$bvModal.show("alert");
+        } else {
+          this.alertTitle = "Error";
+          this.alertText = "Project not created";
+          this.$bvModal.show("alert");
+        }
       } else {
-        alert("Please fill the form correctly.");
+        this.alertTitle = "Error";
+        this.alertText = "Please fill in data correctly";
+        this.$bvModal.show("alert");
       }
     },
     updateSkills(e) {
