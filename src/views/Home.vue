@@ -157,7 +157,7 @@ export default {
       userProjects: [],
       availableProjects: undefined,
       user: undefined,
-      search: null,
+      search: "",
     };
   },
   async mounted() {
