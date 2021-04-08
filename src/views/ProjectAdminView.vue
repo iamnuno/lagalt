@@ -453,6 +453,10 @@
         </div>
       </form>
     </div>
+    <!-- modal -->
+    <b-modal ok-only id="alert" :title="alertTitle">
+      <p class="my-4">{{ alertText }}</p>
+    </b-modal>
   </div>
 </template>
 
@@ -499,6 +503,8 @@ export default {
         titleError: false,
         textError: false,
       },
+      alertText: "",
+      alertTitle: "",
     };
   },
   validations: {
@@ -737,14 +743,20 @@ export default {
                   .catch((error) => console.log(error));
               });
             });
-            alert("Project updated successfully");
+            this.alertTitle = "Confirmation";
+            this.alertText = "Project updated successfully";
+            this.$bvModal.show("alert");
           })
           .catch((error) => {
             console.log(error);
-            alert("Project not updated");
+            this.alertTitle = "Error";
+            this.alertText = "Project not updated";
+            this.$bvModal.show("alert");
           });
       } else {
-        alert("Please fill in data correctly!");
+        this.alertTitle = "Error";
+        this.alertText = "Please fill in data correctly";
+        this.$bvModal.show("alert");
       }
     },
     approveApplication(applicationId) {
