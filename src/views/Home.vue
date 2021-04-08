@@ -116,7 +116,7 @@
     <!-- labels -->
     <!-- TODO: realign labels in table instead of using flex -->
     <div id="label" class="d-flex flex-row pt-2 labels ml-5 rounded">
-      <div>name</div>
+      <div>Name</div>
       <div>Tags</div>
       <div class="mr-5">Skills</div>
       <div class="mx-5">Industry</div>
