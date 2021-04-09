@@ -3,6 +3,8 @@ Lagalt is a web application built by Vue and powered by Spring boot. It provides
 
 The app uses Firebase authentication, thus, the user needs to create an account to participate. The users have the option to view available projects anonymously.
 
+The back-end repository for this application is available at [lagalt-api](https://github.com/nightfrost/Lagalt-API)
+
 ## Firebase configuration
 
 Create a firebase project and add the configuration in `firebase.js` as below:
