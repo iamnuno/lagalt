@@ -303,7 +303,7 @@ export default {
 }
 
 .scorllable {
-  max-height: 300px;
+  height: 300px;
   overflow-y: scroll;
 }
 

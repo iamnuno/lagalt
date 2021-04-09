@@ -188,7 +188,6 @@ export default {
       this.availableProjects = await getAvailableProjects("", this.search);
     },
     filterByStatus: async function (event) {
-      console.log("hi:" + event.target.innerText);
       if (event.target.innerText === "") {
         this.availableProjects = await getAvailableProjects();
       } else {

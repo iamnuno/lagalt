@@ -28,7 +28,7 @@ async function newUser(username, email) {
         .then((response) => {
             res = response.data.userId;
         })
-        .catch(function(error) {
+        .catch(function (error) {
             console.log(error);
         });
     return res;
@@ -52,7 +52,7 @@ async function updateUser(user) {
         .then((response) => {
             res = response.data.userId;
         })
-        .catch(function(error) {
+        .catch(function (error) {
             console.log(error);
         });
     return res;
@@ -80,7 +80,7 @@ async function newProject(project) {
         .then((response) => {
             res = response.data;
         })
-        .catch(function(error) {
+        .catch(function (error) {
             console.log(error);
         });
     return res;
@@ -156,7 +156,6 @@ async function getUsersProjectsById(userId, projectId) {
 }
 
 async function getGitCommit(url) {
-    console.log(url);
     return axios
         .get(url)
         .then((res) => {
@@ -213,11 +212,11 @@ async function isAdmin(projectId) {
     return await axios
         .get(
             BASE_API_URL +
-                API_URL +
-                '/users-projects/' +
-                store.getters.userId +
-                '/' +
-                projectId,
+            API_URL +
+            '/users-projects/' +
+            store.getters.userId +
+            '/' +
+            projectId,
             await config()
         )
         .then((response) => {

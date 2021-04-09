@@ -57,7 +57,6 @@ export default {
   methods: {
     async login() {
       if (await firebase.login(this.getEmail, this.password)) {
-        console.log(await firebase.getJwt());
         // TODO: REPLACE WITH A BETTER SOLUTION
         setTimeout(() => {
           this.$router.push({ name: "home" });
