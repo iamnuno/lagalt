@@ -60,7 +60,7 @@ export default {
         // TODO: REPLACE WITH A BETTER SOLUTION
         setTimeout(() => {
           this.$router.push({ name: "home" });
-        }, 500);
+        }, 1000);
       }
     },
   },
