@@ -102,6 +102,7 @@
           v-model="search"
           type="text"
           placeholder="Search.."
+          autocomplete="off"
           class="m-1 border-0 rounded"
         />
         <font-awesome-icon
