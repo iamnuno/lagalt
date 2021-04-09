@@ -1,5 +1,5 @@
 import { store } from './store';
-import { getUser } from './apiService';
+import { newUser, getUser } from './apiService';
 import firebase from "firebase/app";
 import "firebase/auth";
 import 'firebase/firestore';
@@ -56,7 +56,7 @@ async function register(username, email, password) {
 
         if (status) {
             // save user's credentials  in backend
-            let id = 2; //await newUser(username, email);
+            let id = await newUser(username, email);
             // save user id in firestore to be used later
             firebase.auth().onAuthStateChanged((user) => {
 
